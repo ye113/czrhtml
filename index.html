@@ -3,37 +3,85 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>少爷 | 个人主页</title>
-  <link rel="stylesheet" href="./style.css" />
+  <title>不吃苦瓜 | 个人主页</title>
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="icon" href="./assets/images/avatar.jpg" type="image/jpeg" />
 </head>
 <body>
+  <div class="background"></div>
   <main class="container">
+    <!-- 顶部背景区域 -->
+    <div class="header-bg"></div>
+    
     <!-- 个人信息 -->
     <section class="profile">
-      <h1>少爷</h1>
-      <p class="role">软件开发专业 · 全栈学习者</p>
+      <div class="avatar"></div>
+      <h1>不吃苦瓜</h1>
       <p class="bio">
-        专注于 Web 开发与云原生技术，热爱开源与效率工具。
+        本项目仅用于学习与参考，请勿用于非法用途
       </p>
     </section>
 
     <!-- 项目链接 -->
     <section class="projects">
-      <h2>项目作品</h2>
-      <ul class="link-list">
-        <li><a href="https://github.com/yourname/project1" target="_blank">📦 项目一：Cloudflare 部署工具</a></li>
-        <li><a href="https://github.com/yourname/project2" target="_blank">🎨 项目二：静态博客主题</a></li>
-        <li><a href="https://your-blog.com" target="_blank">✍️ 技术博客</a></li>
-        <li><a href="mailto:your@email.com">📧 联系我</a></li>
-      </ul>
+      <div class="link-list">
+        <a href="#" class="link-item">
+          <span class="icon">🎮</span>
+          <span class="text">GM最新版本</span>
+          <span class="tooltip">密码888</span>
+        </a>
+        <a href="https://op-file.preternatural.cc/pntlpro/apk/winsetup_official_win_901_1.24.2.1.exe" class="link-item">
+          <span class="icon">⚡</span>
+          <span class="text">下载游戏</span>
+          <span class="tooltip">超自然官方1.24</span>
+        </a>
+        <a href="#" class="link-item">
+          <span class="icon">📖</span>
+          <span class="text">使用方法</span>
+        </a>
+        <a href="#" class="link-item">
+          <span class="icon">👥</span>
+          <span class="text">关于我们</span>
+        </a>
+        <a href="https://cknb.love/xxh/" target="_blank" class="link-item">
+          <span class="icon">🔧</span>
+          <span class="text">CK</span>
+        </a>
+        <a href="http://foreveran.lrzxrx.cn/" target="_blank" class="link-item">
+          <span class="icon">🛡️</span>
+          <span class="text">AN</span>
+        </a>
+        <a href="#" class="link-item" id="sponsor-btn">
+          <span class="icon">❤️</span>
+          <span class="text">赞助我们</span>
+        </a>
+      </div>
     </section>
+
+    <!-- 赞助弹窗 -->
+    <div class="modal" id="sponsor-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>感谢您的支持</h3>
+          <button class="close-btn" id="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p class="sponsor-text">GM一个人维护项目并不容易...如果您有经济能力，还请麻烦支持我们一下，但我们并不强求强制消费，尽力而为之即可</p>
+          <div class="qr-code">
+            <img src="./assets/images/avatar.jpg" alt="赞助二维码" />
+            <p>扫码赞助</p>
+          </div>
+          <button class="qq-btn">加入QQ群</button>
+        </div>
+      </div>
+    </div>
 
     <!-- 页脚 -->
     <footer>
-      <p>© 2026 少爷 · Powered by Cloudflare Pages</p>
+      <p>© 2026 不吃苦瓜 · 愿你我惺惺相惜</p>
     </footer>
   </main>
 
-  <script src="./script.js"></script>
+  <script src="./js/script.js"></script>
 </body>
 </html>
