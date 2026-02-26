@@ -25,7 +25,7 @@
     <!-- 项目链接 -->
     <section class="projects">
       <div class="link-list">
-        <a href="#" class="link-item">
+        <a href="https://wwbeq.lanzoub.com/b019vpbl8d" class="link-item">
           <span class="icon">🎮</span>
           <span class="text">GM最新版本</span>
           <span class="tooltip">密码888</span>
@@ -35,20 +35,20 @@
           <span class="text">下载游戏</span>
           <span class="tooltip">超自然官方1.24</span>
         </a>
-        <a href="#" class="link-item">
+        <a href="#" class="link-item" id="usage-btn">
           <span class="icon">📖</span>
           <span class="text">使用方法</span>
         </a>
-        <a href="#" class="link-item">
+        <a href="#" class="link-item" id="about-btn">
           <span class="icon">👥</span>
           <span class="text">关于我们</span>
         </a>
         <a href="https://cknb.love/xxh/" target="_blank" class="link-item">
-          <span class="icon">🔧</span>
+          <span class="icon">🎮</span>
           <span class="text">CK</span>
         </a>
         <a href="http://foreveran.lrzxrx.cn/" target="_blank" class="link-item">
-          <span class="icon">🛡️</span>
+          <span class="icon">🎮</span>
           <span class="text">AN</span>
         </a>
         <a href="#" class="link-item" id="sponsor-btn">
@@ -63,7 +63,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h3>感谢您的支持</h3>
-          <button class="close-btn" id="close-modal">&times;</button>
+          <button class="close-btn" data-close="sponsor-modal">&times;</button>
         </div>
         <div class="modal-body">
           <p class="sponsor-text">GM一个人维护项目并不容易...如果您有经济能力，还请麻烦支持我们一下，但我们并不强求强制消费，尽力而为之即可</p>
@@ -72,6 +72,32 @@
             <p>扫码赞助</p>
           </div>
           <button class="qq-btn">加入QQ群</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 使用方法弹窗 -->
+    <div class="modal" id="usage-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>使用方法</h3>
+          <button class="close-btn" data-close="usage-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p class="sponsor-text">点击赞助，加入QQ群询问</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 关于我们弹窗 -->
+    <div class="modal" id="about-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>关于我们</h3>
+          <button class="close-btn" data-close="about-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p class="sponsor-text">我们是一群热爱技术的开发者，致力于为用户提供优质的学习资源和工具。本项目仅供学习与参考，请勿用于非法用途。</p>
         </div>
       </div>
     </div>

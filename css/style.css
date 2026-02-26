@@ -35,7 +35,7 @@ body {
 .header-bg {
   width: 100%;
   height: 250px;
-  background: url('../assets/images/avatar.jpg') center center/cover no-repeat;
+  background: url('../assets/images/header-bg.jpg') center center/cover no-repeat;
   position: relative;
   border-radius: 16px;
   margin: 0 0 1.5rem 0;
@@ -178,45 +178,6 @@ footer {
   .avatar { width: 100px; height: 100px; }
 }
 
-html.dark-mode .background {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-}
-
-html.dark-mode .container {
-  background: rgba(30, 30, 40, 0.95);
-}
-
-html.dark-mode .header-bg {
-  filter: brightness(0.7);
-}
-
-html.dark-mode .avatar {
-  border-color: rgba(30, 30, 40, 0.95);
-}
-
-html.dark-mode .profile h1,
-html.dark-mode .projects h2 {
-  color: #f0f0f0;
-}
-
-html.dark-mode .bio {
-  color: #b0b0b0;
-}
-
-html.dark-mode .link-item {
-  background: rgba(255, 255, 255, 0.05);
-  color: #e0e0e0;
-}
-
-html.dark-mode .link-item:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: #a78bfa;
-}
-
-html.dark-mode footer {
-  color: #666;
-}
-
 .modal {
   display: none;
   position: fixed;
@@ -341,24 +302,4 @@ html.dark-mode footer {
 .qq-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-}
-
-html.dark-mode .modal-content {
-  background: #252525;
-}
-
-html.dark-mode .modal-header {
-  border-bottom-color: #333;
-}
-
-html.dark-mode .modal-header h3 {
-  color: #f0f0f0;
-}
-
-html.dark-mode .sponsor-text {
-  color: #b0b0b0;
-}
-
-html.dark-mode .qr-code p {
-  color: #666;
 }

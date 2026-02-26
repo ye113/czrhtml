@@ -1,36 +1,38 @@
 document.addEventListener('DOMContentLoaded', function() {
-  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-  
-  if (prefersDark) {
-    document.documentElement.classList.add('dark-mode');
-  }
-  
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
-    if (e.matches) {
-      document.documentElement.classList.add('dark-mode');
-    } else {
-      document.documentElement.classList.remove('dark-mode');
-    }
-  });
-
   const sponsorBtn = document.getElementById('sponsor-btn');
-  const modal = document.getElementById('sponsor-modal');
-  const closeBtn = document.getElementById('close-modal');
+  const usageBtn = document.getElementById('usage-btn');
+  const aboutBtn = document.getElementById('about-btn');
+  const closeBtns = document.querySelectorAll('.close-btn');
   const qqBtn = document.querySelector('.qq-btn');
 
   sponsorBtn.addEventListener('click', function(e) {
     e.preventDefault();
-    modal.classList.add('show');
+    document.getElementById('sponsor-modal').classList.add('show');
   });
 
-  closeBtn.addEventListener('click', function() {
-    modal.classList.remove('show');
+  usageBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('usage-modal').classList.add('show');
   });
 
-  modal.addEventListener('click', function(e) {
-    if (e.target === modal) {
-      modal.classList.remove('show');
-    }
+  aboutBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('about-modal').classList.add('show');
+  });
+
+  closeBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      const modalId = btn.getAttribute('data-close');
+      document.getElementById(modalId).classList.remove('show');
+    });
+  });
+
+  document.querySelectorAll('.modal').forEach(function(modal) {
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        modal.classList.remove('show');
+      }
+    });
   });
 
   qqBtn.addEventListener('click', function() {
