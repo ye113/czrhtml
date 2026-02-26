@@ -261,11 +261,14 @@ footer {
   padding: 1.5rem;
 }
 
-.sponsor-text {
+.modal-text {
   color: #666;
   line-height: 1.8;
   margin-bottom: 1.5rem;
   text-align: center;
+  font-size: 1rem;
+  min-height: 1.8rem;
+  display: block;
 }
 
 .qr-code {
