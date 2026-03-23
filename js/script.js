@@ -7,26 +7,44 @@ document.addEventListener('DOMContentLoaded', function() {
   const bgMusic = document.getElementById('bg-music');
   const musicBtn = document.getElementById('music-btn');
   const musicPlayer = document.getElementById('music-player');
+  const vinylRecord = document.querySelector('.vinyl-record');
+
+  let isPlaying = false;
+  let rotationAngle = 0;
+  let animationFrameId = null;
+  const rotationSpeed = 0.5;
+
+  function animate() {
+    if (isPlaying) {
+      rotationAngle = (rotationAngle + rotationSpeed) % 360;
+      vinylRecord.style.transform = `rotate(${rotationAngle}deg)`;
+      animationFrameId = requestAnimationFrame(animate);
+    }
+  }
 
   function playMusic() {
     bgMusic.play().then(function() {
+      isPlaying = true;
       musicBtn.classList.add('playing');
-      musicPlayer.classList.remove('paused');
+      animate();
     }).catch(function(error) {
       console.log('自动播放被阻止，需要用户交互');
-      musicPlayer.classList.add('paused');
     });
   }
 
   function toggleMusic() {
     if (bgMusic.paused) {
       bgMusic.play();
+      isPlaying = true;
       musicBtn.classList.add('playing');
-      musicPlayer.classList.remove('paused');
+      animate();
     } else {
       bgMusic.pause();
+      isPlaying = false;
       musicBtn.classList.remove('playing');
-      musicPlayer.classList.add('paused');
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
     }
   }
 
