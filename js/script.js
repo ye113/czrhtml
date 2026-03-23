@@ -57,11 +57,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('sponsor-modal').classList.add('show');
   });
 
-  usageBtn.addEventListener('click', function(e) {
-    e.preventDefault();
-    document.getElementById('usage-modal').classList.add('show');
-  });
-
   aboutBtn.addEventListener('click', function(e) {
     e.preventDefault();
     document.getElementById('about-modal').classList.add('show');
