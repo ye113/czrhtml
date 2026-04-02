@@ -307,6 +307,60 @@ footer {
   box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
 }
 
+.recruitment-info {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.recruitment-info h4 {
+  margin: 0 0 0.8rem 0;
+  color: #667eea;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.recruitment-info ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.recruitment-info li {
+  padding: 0.6rem 0;
+  border-bottom: 1px solid #e0e0e0;
+  color: #555;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+}
+
+.recruitment-info li:last-child {
+  border-bottom: none;
+}
+
+.recruitment-info li::before {
+  content: '✓';
+  color: #667eea;
+  font-weight: bold;
+  margin-right: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.contact-info {
+  text-align: center;
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: #f0f4ff;
+  border-radius: 10px;
+}
+
+.contact-info .modal-text {
+  margin-bottom: 0;
+}
+
 .snowflake {
   position: fixed;
   top: -10px;

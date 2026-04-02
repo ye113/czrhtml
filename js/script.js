@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-  const sponsorBtn = document.getElementById('sponsor-btn');
+  const joinBtn = document.getElementById('join-btn');
   const usageBtn = document.getElementById('usage-btn');
   const aboutBtn = document.getElementById('about-btn');
   const closeBtns = document.querySelectorAll('.close-btn');
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   musicBtn.addEventListener('click', toggleMusic);
 
-  sponsorBtn.addEventListener('click', function(e) {
+  joinBtn.addEventListener('click', function(e) {
     e.preventDefault();
     document.getElementById('sponsor-modal').classList.add('show');
   });
