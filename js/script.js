@@ -1,15 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
   const joinBtn = document.getElementById('join-btn');
-  const usageBtn = document.getElementById('usage-btn');
   const aboutBtn = document.getElementById('about-btn');
   const closeBtns = document.querySelectorAll('.close-btn');
-  const qqBtn = document.querySelector('.qq-btn');
   const bgMusic = document.getElementById('bg-music');
   const musicBtn = document.getElementById('music-btn');
-  const musicPlayer = document.getElementById('music-player');
   const vinylRecord = document.querySelector('.vinyl-record');
 
+  if (!bgMusic || !musicBtn || !vinylRecord) return;
+
   let isPlaying = false;
+  let hasInteracted = false;
   let rotationAngle = 0;
   let animationFrameId = null;
   const rotationSpeed = 0.5;
@@ -22,22 +22,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  function playMusic() {
+  function startMusic() {
+    hasInteracted = true;
     bgMusic.play().then(function() {
       isPlaying = true;
       musicBtn.classList.add('playing');
       animate();
-    }).catch(function(error) {
-      console.log('自动播放被阻止，需要用户交互');
-    });
+    }).catch(function() {});
   }
 
   function toggleMusic() {
+    hasInteracted = true;
     if (bgMusic.paused) {
-      bgMusic.play();
-      isPlaying = true;
-      musicBtn.classList.add('playing');
-      animate();
+      startMusic();
     } else {
       bgMusic.pause();
       isPlaying = false;
@@ -48,24 +45,32 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  playMusic();
-
   musicBtn.addEventListener('click', toggleMusic);
 
-  joinBtn.addEventListener('click', function(e) {
-    e.preventDefault();
-    document.getElementById('sponsor-modal').classList.add('show');
+  document.addEventListener('click', function() {
+    if (!hasInteracted) startMusic();
   });
 
-  aboutBtn.addEventListener('click', function(e) {
-    e.preventDefault();
-    document.getElementById('about-modal').classList.add('show');
-  });
+  if (joinBtn) {
+    joinBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      var modal = document.getElementById('sponsor-modal');
+      if (modal) modal.classList.add('show');
+    });
+  }
+
+  if (aboutBtn) {
+    aboutBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      var modal = document.getElementById('about-modal');
+      if (modal) modal.classList.add('show');
+    });
+  }
 
   closeBtns.forEach(function(btn) {
     btn.addEventListener('click', function() {
-      const modalId = btn.getAttribute('data-close');
-      document.getElementById(modalId).classList.remove('show');
+      var modal = document.getElementById(btn.getAttribute('data-close'));
+      if (modal) modal.classList.remove('show');
     });
   });
 
@@ -77,31 +82,70 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  qqBtn.addEventListener('click', function() {
-    window.open('https://qm.qq.com/q/ghRdG8iRgW', '_blank');
-  });
+  var canvas = document.createElement('canvas');
+  canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999';
+  document.body.appendChild(canvas);
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 
-  function createSnowflake() {
-    const snowflake = document.createElement('div');
-    snowflake.classList.add('snowflake');
-    snowflake.innerHTML = '❄';
-    
-    const size = Math.random() * 10 + 8;
-    const left = Math.random() * 100;
-    const duration = Math.random() * 5 + 5;
-    const delay = Math.random() * 2;
-    
-    snowflake.style.fontSize = size + 'px';
-    snowflake.style.left = left + '%';
-    snowflake.style.animationDuration = duration + 's';
-    snowflake.style.animationDelay = delay + 's';
-    
-    document.body.appendChild(snowflake);
-    
-    setTimeout(function() {
-      snowflake.remove();
-    }, (duration + delay) * 1000);
+  var ctx = canvas.getContext('2d');
+  var flakes = [];
+  var maxFlakes = 100;
+
+  function createFlake() {
+    return {
+      x: Math.random() * canvas.width,
+      y: -10,
+      r: Math.random() * 3 + 1.5,
+      speed: Math.random() * 1.5 + 0.3,
+      wind: Math.random() * 0.4 - 0.2,
+      opacity: Math.random() * 0.6 + 0.4
+    };
   }
 
-  setInterval(createSnowflake, 200);
+  function animateSnow() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (flakes.length < maxFlakes && Math.random() < 0.3) {
+      flakes.push(createFlake());
+    }
+
+    for (var i = flakes.length - 1; i >= 0; i--) {
+      var f = flakes[i];
+      f.y += f.speed;
+      f.x += f.wind;
+
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,' + f.opacity + ')';
+      ctx.fill();
+
+      if (f.y > canvas.height + 10) {
+        flakes.splice(i, 1);
+      }
+    }
+
+    requestAnimationFrame(animateSnow);
+  }
+
+  var snowRafId = requestAnimationFrame(animateSnow);
+
+  document.addEventListener('visibilitychange', function() {
+    if (document.hidden) {
+      cancelAnimationFrame(snowRafId);
+    } else {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      snowRafId = requestAnimationFrame(animateSnow);
+    }
+  });
+
+  var resizeTimer;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }, 200);
+  });
 });

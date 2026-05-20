@@ -176,6 +176,10 @@ footer {
   .profile { margin-top: -40px; }
   .profile h1 { font-size: 1.6rem; }
   .avatar { width: 100px; height: 100px; }
+  .music-player { bottom: 15px; left: 15px; }
+  .music-btn { width: 60px; height: 60px; }
+  .vinyl-record { width: 60px; height: 60px; }
+  .vinyl-center { width: 24px; height: 24px; }
 }
 
 .modal {
@@ -359,29 +363,6 @@ footer {
 
 .contact-info .modal-text {
   margin-bottom: 0;
-}
-
-.snowflake {
-  position: fixed;
-  top: -10px;
-  color: #fff;
-  font-size: 1rem;
-  user-select: none;
-  pointer-events: none;
-  z-index: 9999;
-  animation: fall linear infinite;
-  text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
-}
-
-@keyframes fall {
-  0% {
-    transform: translateY(0) rotate(0deg);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(100vh) rotate(360deg);
-    opacity: 0.3;
-  }
 }
 
 .music-player {
