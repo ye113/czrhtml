@@ -104,12 +104,119 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  /* ===== Particles ===== */
+  /* ===== Effect 1: Mouse Glow (desktop only) ===== */
+  var glow = document.getElementById('mouseGlow');
+
+  if (glow) {
+    var glowX = -50, glowY = -50;
+    var targetX = -50, targetY = -50;
+
+    // Colors to cycle between (R,G,B values)
+    var glowColors = [
+      { r: 15, g: 139, b: 141 },   // teal
+      { r: 255, g: 107, b: 107 },  // coral
+      { r: 108, g: 92, b: 231 },   // purple
+      { r: 253, g: 203, b: 110 }   // gold
+    ];
+    var currentIdx = 0;
+    var nextIdx = 1;
+    var blend = 0; // 0 = current color, 1 = next color
+    var blendSpeed = 0.004; // how fast to blend (takes ~4s for full cycle at 60fps)
+
+    document.addEventListener('mousemove', function (e) {
+      targetX = e.clientX;
+      targetY = e.clientY;
+      glow.style.opacity = '1';
+    });
+
+    document.addEventListener('mouseleave', function () {
+      glow.style.opacity = '0';
+    });
+
+    document.addEventListener('touchstart', function () {
+      glow.style.display = 'none';
+    }, { once: true });
+
+    function lerp(a, b, t) { return a + (b - a) * t; }
+
+    function updateGlowColor() {
+      var from = glowColors[currentIdx];
+      var to = glowColors[nextIdx];
+      var r = Math.round(lerp(from.r, to.r, blend));
+      var g = Math.round(lerp(from.g, to.g, blend));
+      var b = Math.round(lerp(from.b, to.b, blend));
+      glow.style.background = 'radial-gradient(circle, rgba(' + r + ',' + g + ',' + b + ',0.2), rgba(' + r + ',' + g + ',' + b + ',0) 70%)';
+    }
+
+    function animateGlow() {
+      glowX += (targetX - glowX) * 0.12;
+      glowY += (targetY - glowY) * 0.12;
+      glow.style.transform = 'translate(' + (glowX - 50) + 'px, ' + (glowY - 50) + 'px)';
+
+      // Smooth color blend
+      blend += blendSpeed;
+      if (blend >= 1) {
+        blend = 0;
+        currentIdx = nextIdx;
+        nextIdx = (nextIdx + 1) % glowColors.length;
+      }
+      updateGlowColor();
+
+      requestAnimationFrame(animateGlow);
+    }
+
+    updateGlowColor();
+    animateGlow();
+  }
+
+  /* ===== Effect 2: Click Ripple (desktop + mobile) ===== */
+  var rippleColors = [
+    { ring: 'rgba(15,139,141,0.35)', dot: 'rgba(15,139,141,0.5)' },
+    { ring: 'rgba(255,107,107,0.3)', dot: 'rgba(255,107,107,0.45)' },
+    { ring: 'rgba(108,92,231,0.3)',  dot: 'rgba(108,92,231,0.45)' },
+    { ring: 'rgba(253,203,110,0.35)', dot: 'rgba(253,203,110,0.5)' }
+  ];
+
+  function createRipple(x, y) {
+    var c = rippleColors[Math.floor(Math.random() * rippleColors.length)];
+
+    // Ring
+    var ring = document.createElement('div');
+    ring.className = 'ripple-ring';
+    ring.style.left = x + 'px';
+    ring.style.top = y + 'px';
+    ring.style.border = '2px solid ' + c.ring;
+    document.body.appendChild(ring);
+    setTimeout(function () { if (ring.parentNode) ring.parentNode.removeChild(ring); }, 900);
+
+    // Center dot burst
+    for (var d = 0; d < 4; d++) {
+      var dot = document.createElement('div');
+      dot.className = 'ripple-ring';
+      dot.style.left = x + 'px';
+      dot.style.top = y + 'px';
+      dot.style.border = 'none';
+      dot.style.borderRadius = '50%';
+      dot.style.background = c.dot;
+      dot.style.animation = 'rippleDotAnim 0.6s ease-out forwards';
+      dot.style.animationDelay = (d * 0.06) + 's';
+      document.body.appendChild(dot);
+      setTimeout(function () { if (dot.parentNode) dot.parentNode.removeChild(dot); }, 1000);
+    }
+  }
+
+  document.addEventListener('click', function (e) { createRipple(e.clientX, e.clientY); });
+  document.addEventListener('touchstart', function (e) {
+    var touch = e.touches[0];
+    if (touch) createRipple(touch.clientX, touch.clientY);
+  });
+
+  /* ===== Effect 3: Floating Star Particles ===== */
   var canvas = document.createElement('canvas');
   document.body.appendChild(canvas);
   var ctx = canvas.getContext('2d');
   var particles = [];
-  var MAX = 30;
+  var MAX = 45;
 
   function resize() {
     canvas.width = window.innerWidth;
@@ -117,23 +224,30 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   resize();
 
-  function createP() {
+  function createStar() {
+    var colors = ['rgba(15,139,141,', 'rgba(255,107,107,', 'rgba(108,92,231,', 'rgba(253,203,110,'];
+    var color = colors[Math.floor(Math.random() * colors.length)];
     return {
       x: Math.random() * canvas.width,
-      y: canvas.height + 8,
-      r: Math.random() * 1.5 + 0.5,
-      speed: Math.random() * 0.4 + 0.1,
-      wind: Math.random() * 0.15 - 0.075,
-      opacity: Math.random() * 0.2 + 0.03
+      y: canvas.height + 10,
+      r: Math.random() * 2.2 + 0.8,
+      speed: Math.random() * 0.5 + 0.15,
+      wind: Math.random() * 0.2 - 0.1,
+      color: color,
+      opacity: Math.random() * 0.35 + 0.1,
+      twinkleSpeed: Math.random() * 0.02 + 0.01,
+      twinklePhase: Math.random() * Math.PI * 2
     };
   }
 
   var rafId;
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    if (particles.length < MAX && Math.random() < 0.1) {
-      particles.push(createP());
+  function drawStars() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var time = Date.now();
+
+    if (particles.length < MAX && Math.random() < 0.15) {
+      particles.push(createStar());
     }
 
     for (var i = particles.length - 1; i >= 0; i--) {
@@ -141,22 +255,36 @@ document.addEventListener('DOMContentLoaded', function () {
       p.y -= p.speed;
       p.x += p.wind;
 
+      // Twinkle
+      var twinkle = 0.6 + 0.4 * Math.sin(time * p.twinkleSpeed + p.twinklePhase);
+      var alpha = p.opacity * twinkle;
+
+      // Glow halo
+      var grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 3);
+      grad.addColorStop(0, p.color + alpha * 0.4 + ')');
+      grad.addColorStop(1, p.color + '0)');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r * 3, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Core
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(150,150,180,' + p.opacity + ')';
+      ctx.fillStyle = p.color + alpha + ')';
       ctx.fill();
 
       if (p.y < -10) particles.splice(i, 1);
     }
 
-    rafId = requestAnimationFrame(draw);
+    rafId = requestAnimationFrame(drawStars);
   }
 
-  rafId = requestAnimationFrame(draw);
+  rafId = requestAnimationFrame(drawStars);
 
   document.addEventListener('visibilitychange', function () {
     if (document.hidden) cancelAnimationFrame(rafId);
-    else { resize(); rafId = requestAnimationFrame(draw); }
+    else { resize(); rafId = requestAnimationFrame(drawStars); }
   });
 
   var resizeTimer;
