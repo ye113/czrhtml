@@ -3,123 +3,178 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>不吃苦瓜 | 个人主页</title>
+  <title>不吃苦瓜 | 超自然社区</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./css/style.css" />
   <link rel="icon" href="./assets/images/avatar.jpg" type="image/jpeg" />
 </head>
 <body>
-  <div class="background"></div>
-  
+
+  <div class="bg-deco bg-deco-1"></div>
+  <div class="bg-deco bg-deco-2"></div>
+  <div class="bg-deco bg-deco-3"></div>
+  <div class="bg-grid"></div>
+
   <audio id="bg-music" loop>
-    <!-- <source src="./assets/music/bg.mp3" type="audio/mpeg"> -->
     <source src="./assets/music/bg.m4a" type="audio/mp4">
   </audio>
-  
-  <div class="music-player" id="music-player">
-    <button class="music-btn" id="music-btn">
-      <div class="vinyl-record">
-        <div class="vinyl-center">
-          <img src="./assets/images/avatar.jpg" alt="GM" class="vinyl-avatar" />
+
+  <!-- ===== Top Bar ===== -->
+  <div class="top-bar">
+    <div class="top-bar-inner">
+      <div class="top-brand">
+        <div class="top-avatar" style="background-image:url(./assets/images/avatar.jpg)"></div>
+        <div>
+          <div class="top-name">不吃苦瓜</div>
+          <div class="top-tag">超自然游戏社区</div>
         </div>
       </div>
-    </button>
+      <button class="music-pill" id="music-btn">
+        <span class="music-pill-icon">♪</span>
+        <span class="music-pill-text" id="music-label">播放音乐</span>
+      </button>
+    </div>
   </div>
-  
-  <main class="container">
-    <!-- 顶部背景区域 -->
-    <div class="header-bg"></div>
-    
-    <!-- 个人信息 -->
-    <section class="profile">
-      <div class="avatar"></div>
-      <h1>不吃苦瓜</h1>
-      <p class="bio">
-        本项目仅用于学习与参考，请勿用于非法用途
-      </p>
+
+  <!-- ===== Hero ===== -->
+  <header class="hero" id="hero">
+    <div class="hero-bg" id="hero-bg">
+      <div class="hero-img" id="hero-img"></div>
+      <div class="hero-img-overlay"></div>
+      <div class="hero-img-gradient"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-avatar-wrap">
+        <img src="./assets/images/avatar.jpg" alt="" class="hero-avatar" />
+      </div>
+      <h1 class="hero-title">不吃苦瓜</h1>
+      <p class="hero-desc">本项目仅用于学习与参考，请勿用于非法用途</p>
+    </div>
+  </header>
+
+  <main class="content">
+
+    <!-- ===== Downloads ===== -->
+    <section class="block">
+      <div class="block-label">
+        <span class="block-dot" style="background:#ff6b6b"></span>
+        游戏下载
+      </div>
+      <a href="https://op-file.preternatural.cc/pntlpro/apk/winsetup_official_win_901_1.29.3.1.exe" class="btn-download">
+        <span class="btn-download-icon" style="background:#ff6b6b">⚡</span>
+        <span class="btn-download-body">
+          <span class="btn-download-title">下载游戏</span>
+          <span class="btn-download-sub">超自然官方 1.29 最新版</span>
+        </span>
+        <span class="btn-download-arrow">→</span>
+      </a>
+      <a href="https://wwbeq.lanzoub.com/b019vpbl8d" class="btn-download">
+        <span class="btn-download-icon" style="background:#a29bfe">🎮</span>
+        <span class="btn-download-body">
+          <span class="btn-download-title">GM 下载</span>
+          <span class="btn-download-sub">提取码 888</span>
+        </span>
+        <span class="btn-download-arrow">→</span>
+      </a>
     </section>
 
-    <!-- 项目链接 -->
-    <section class="projects">
-      <div class="link-list">
-        <a href="https://wwbeq.lanzoub.com/b019vpbl8d" class="link-item">
-          <span class="icon">🎮</span>
-          <span class="text">GM下载（888）</span>
-          <span class="tooltip">密码888</span>
+    <!-- ===== Services ===== -->
+    <section class="block">
+      <div class="block-label">
+        <span class="block-dot" style="background:#fdcb6e"></span>
+        资源服务
+      </div>
+      <div class="card-grid">
+        <a href="https://lanlii.cn/shop/goodme" target="_blank" rel="noopener noreferrer" class="card-sm" id="card-btn">
+          <span class="card-sm-icon" style="background:#ffeaa7;color:#d68910">💳</span>
+          <span class="card-sm-title">购卡网址</span>
+          <span class="card-sm-sub">购买游戏卡密</span>
         </a>
-        <a href="https://op-file.preternatural.cc/pntlpro/apk/winsetup_official_win_901_1.29.3.1.exe" class="link-item">
-          <span class="icon">⚡</span>
-          <span class="text">下载游戏</span>
-          <span class="tooltip">超自然官方1.29</span>
+        <a href="https://wwbeq.lanzoub.com/b019vrc8uf" class="card-sm" id="usage-btn">
+          <span class="card-sm-icon" style="background:#dfe6e9;color:#636e72">📖</span>
+          <span class="card-sm-title">使用教程</span>
+          <span class="card-sm-sub">提取码 888</span>
         </a>
-        <a href="https://lanlii.cn/shop/goodme" target="_blank" rel="noopener noreferrer" class="link-item" id="card-btn">
-          <span class="icon">💳</span>
-          <span class="text">购卡网址</span>
-        </a>
-        <a href="https://wwbeq.lanzoub.com/b019vrc8uf" class="link-item" id="usage-btn">
-          <span class="icon">📖</span>
-          <span class="text">使用教程（888）</span>
-        </a>
-        <a href="#" class="link-item" id="about-btn">
-          <span class="icon">👥</span>
-          <span class="text">关于我们</span>
-        </a>
-        <a href="#" class="link-item" id="join-btn">
-          <span class="icon">🎓</span>
-          <span class="text">学生蛋通道</span>
-        </a>
-        <!-- <a href="https://cknb.love/xxh/" target="_blank" class="link-item">
-          <span class="icon">🎮</span>
-          <span class="text">CK</span>
-        </a> -->
-        <!-- <a href="http://foreveran.lrzxrx.cn/" target="_blank" class="link-item">
-          <span class="icon">🎮</span>
-          <span class="text">AN</span>
-        </a> -->
       </div>
     </section>
 
-    <!-- 赞助弹窗 -->
-    <div class="modal" id="sponsor-modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>加入我们</h3>
-          <button class="close-btn" data-close="sponsor-modal">&times;</button>
-        </div>
-        <div class="modal-body">
-          <p class="modal-text">如果你是学生党或暂时资金紧张，欢迎查看我们的招募要求！只要符合条件，通过付出劳动即可换取卡密作为回报。</p>
-          <div class="recruitment-info">
-            <h4>招募岗位</h4>
-            <ul>
-              <li>短视频宣发组 - 制作并推广游戏短视频内容</li>
-              <li>直播宣发组 - 负责游戏直播推广与观众互动</li>
-              <li>参数调试组 - 参与游戏参数测试与优化工作</li>
-            </ul>
-          </div>
-          <div class="contact-info">
-            <p class="modal-text" style="margin-top: 15px;">对以上岗位感兴趣？请加QQ：<strong style="color: #667eea; font-size: 1.1rem;">3814635354</strong>，备注"应聘+岗位名称"。</p>
-          </div>
-        </div>
+    <!-- ===== Community ===== -->
+    <section class="block">
+      <div class="block-label">
+        <span class="block-dot" style="background:#6c5ce7"></span>
+        关于社区
       </div>
-    </div>
-
-    <!-- 关于我们弹窗 -->
-    <div class="modal" id="about-modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>关于我们</h3>
-          <button class="close-btn" data-close="about-modal">&times;</button>
-        </div>
-        <div class="modal-body">
-          <p class="modal-text">我们是一群热爱技术的开发者，致力于为用户提供优质的学习资源和工具。本项目仅供学习与参考，请勿用于非法用途。</p>
-        </div>
+      <div class="card-grid">
+        <button class="card-sm" id="about-btn">
+          <span class="card-sm-icon" style="background:#dfe6e9;color:#6c5ce7">👥</span>
+          <span class="card-sm-title">关于我们</span>
+          <span class="card-sm-sub">了解团队故事</span>
+        </button>
+        <button class="card-sm" id="join-btn">
+          <span class="card-sm-icon" style="background:#ffeaa7;color:#d68910">🎓</span>
+          <span class="card-sm-title">学生蛋通道</span>
+          <span class="card-sm-sub">加入我们一起成长</span>
+        </button>
       </div>
-    </div>
 
-    <!-- 页脚 -->
+      <!-- Recruit inline -->
+      <div class="recruit-bar">
+        <span class="recruit-bar-label">招募岗位</span>
+        <div class="recruit-bar-items">
+          <span class="recruit-bar-pill">短视频宣发</span>
+          <span class="recruit-bar-pill">直播推广</span>
+          <span class="recruit-bar-pill">参数调试</span>
+        </div>
+        <span class="recruit-bar-more" id="recruit-more-btn">详情 →</span>
+      </div>
+    </section>
+
+    <!-- ===== Footer ===== -->
     <footer>
       <p>© 2026 不吃苦瓜 · 愿你我惺惺相惜</p>
     </footer>
+
   </main>
+
+  <!-- ===== Modals ===== -->
+  <div class="modal" id="about-modal">
+    <div class="modal-overlay"></div>
+    <div class="modal-box">
+      <div class="modal-box-head">
+        <h3>👥 关于我们</h3>
+        <button class="modal-box-x" data-close="about-modal">&times;</button>
+      </div>
+      <div class="modal-box-body">
+        <p>我们是一群热爱技术的开发者，致力于为用户提供优质的学习资源和工具。本项目仅供学习与参考，请勿用于非法用途。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="sponsor-modal">
+    <div class="modal-overlay"></div>
+    <div class="modal-box">
+      <div class="modal-box-head">
+        <h3>🎓 学生蛋通道</h3>
+        <button class="modal-box-x" data-close="sponsor-modal">&times;</button>
+      </div>
+      <div class="modal-box-body">
+        <p>如果你是学生党或暂时资金紧张，欢迎查看我们的招募要求！只要符合条件，通过付出劳动即可换取卡密作为回报。</p>
+        <div class="modal-recruit">
+          <h4>招募岗位</h4>
+          <ul>
+            <li>短视频宣发组 — 制作并推广游戏短视频内容</li>
+            <li>直播宣发组 — 负责游戏直播推广与观众互动</li>
+            <li>参数调试组 — 参与游戏参数测试与优化工作</li>
+          </ul>
+        </div>
+        <div class="modal-contact">
+          <p>对以上岗位感兴趣？请加QQ：<strong>3814635354</strong>，备注"应聘+岗位名称"。</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="./js/script.js"></script>
 </body>
