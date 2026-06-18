@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>个性签名生成器 - GoodMe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f0f2f5;
+      --surface: #ffffff;
+      --text: #1a1a2e;
+      --text-dim: #636e72;
+      --text-muted: #b2bec3;
+      --shadow: 0 2px 12px rgba(0,0,0,0.06);
+      --shadow-hover: 0 6px 24px rgba(0,0,0,0.1);
+      --radius: 14px;
+      --radius-sm: 10px;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --ease: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: 2rem;
+      position: relative;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 600px 400px at 10% 5%, rgba(15, 139, 141, 0.06), transparent),
+        radial-gradient(ellipse 500px 500px at 90% 20%, rgba(255, 107, 107, 0.05), transparent),
+        radial-gradient(ellipse 400px 500px at 50% 95%, rgba(108, 92, 231, 0.05), transparent),
+        radial-gradient(ellipse 300px 300px at 80% 60%, rgba(253, 203, 110, 0.04), transparent);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .bg-deco {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(60px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .bg-deco-1 {
+      width: 300px; height: 300px;
+      background: rgba(15, 139, 141, 0.06);
+      top: -80px; left: -60px;
+      animation: bgFloat 25s ease-in-out infinite;
+    }
+    .bg-deco-2 {
+      width: 250px; height: 250px;
+      background: rgba(255, 107, 107, 0.05);
+      bottom: 10%; right: -40px;
+      animation: bgFloat 20s ease-in-out infinite reverse;
+    }
+    .bg-deco-3 {
+      width: 200px; height: 200px;
+      background: rgba(108, 92, 231, 0.04);
+      top: 50%; left: 50%;
+      animation: bgFloat 22s ease-in-out infinite 5s;
+    }
+    @keyframes bgFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -20px) scale(1.05); }
+      66% { transform: translate(-20px, 25px) scale(0.95); }
+    }
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ===== Top Bar ===== */
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.8);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+    }
+    .top-bar-inner {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 0.6rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .top-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .top-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background-image: url(./assets/images/avatar.jpg);
+      background-size: cover;
+      background-position: center;
+    }
+    .top-name {
+      font-weight: 700;
+      font-size: 0.9rem;
+      line-height: 1.2;
+    }
+    .top-tag {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+    }
+
+    /* ===== Content ===== */
+    .content {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===== Block ===== */
+    .block {
+      margin-top: 1.25rem;
+    }
+    .block-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+      margin-bottom: 0.6rem;
+    }
+    .block-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ===== Card ===== */
+    .card-main {
+      background: var(--surface);
+      border: 1px solid rgba(0,0,0,0.04);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.5rem 1.25rem;
+    }
+
+    /* ===== Input ===== */
+    .field-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .field-label span {
+      font-weight: 400;
+      color: var(--text-dim);
+    }
+    #textInput {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: var(--radius-sm);
+      font-family: var(--font);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color .2s;
+    }
+    #textInput:focus { border-color: #a29bfe; }
+
+    /* ===== Char Editor ===== */
+    .char-editor-wrap { margin-top: 1rem; }
+    .char-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 0.5rem;
+      min-height: 44px;
+      align-items: center;
+    }
+    .char-item {
+      position: relative;
+      width: 44px; height: 44px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform .15s, border-color .15s;
+      user-select: none;
+      color: #fff;
+      text-shadow: 0 1px 2px rgba(0,0,0,.3);
+    }
+    .char-item:hover { transform: scale(1.1); }
+    .char-item.active { border-color: #1a1a2e; box-shadow: 0 0 0 2px rgba(26,26,46,.15); }
+    .char-empty { color: var(--text-muted); font-size: 0.85rem; padding: 10px 0; }
+
+    /* ===== Palette ===== */
+    .color-picker-row { margin-top: 1rem; }
+    .color-picker-row .row-label { font-size: 0.78rem; font-weight: 600; color: var(--text); margin-bottom: 0.5rem; }
+    .palette {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .palette-btn {
+      width: 34px; height: 34px;
+      border-radius: 8px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform .15s, border-color .15s;
+    }
+    .palette-btn:hover { transform: scale(1.15); }
+    .palette-btn.custom-color {
+      border: 2px dashed #ccc;
+      background: #f5f5f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      cursor: pointer;
+      color: #999;
+    }
+
+    /* ===== Size ===== */
+    .size-row { margin-top: 1rem; display: flex; align-items: center; gap: 0.75rem; }
+    .size-row label { font-size: 0.78rem; font-weight: 600; color: var(--text); white-space: nowrap; }
+    .size-row input[type="range"] {
+      flex: 1;
+      accent-color: #a29bfe;
+      height: 4px;
+    }
+    .size-val {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text);
+      min-width: 28px;
+      text-align: center;
+    }
+
+    /* ===== Preview ===== */
+    .preview-wrap {
+      margin-top: 1rem;
+      padding: 1.25rem;
+      background: #f8f9fa;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(0,0,0,0.04);
+      min-height: 80px;
+    }
+    .preview-label { font-size: 0.75rem; font-weight: 600; color: var(--text-dim); margin-bottom: 0.6rem; }
+    .preview-box {
+      word-break: break-all;
+      line-height: 1.6;
+      min-height: 40px;
+    }
+
+    /* ===== Output ===== */
+    .output-wrap { margin-top: 0.75rem; position: relative; }
+    .output-wrap textarea {
+      width: 100%;
+      height: 70px;
+      padding: 0.75rem;
+      border: 2px solid #e0e0e0;
+      border-radius: var(--radius-sm);
+      font-size: 0.78rem;
+      font-family: "Courier New", monospace;
+      resize: none;
+      outline: none;
+      background: #fafafa;
+      color: var(--text);
+    }
+    .output-wrap textarea:focus { border-color: #a29bfe; }
+
+    /* ===== Buttons ===== */
+    .btn-row { display: flex; gap: 0.5rem; margin-top: 1rem; }
+    .btn {
+      flex: 1;
+      padding: 0.75rem;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 600;
+      font-family: var(--font);
+      cursor: pointer;
+      transition: opacity .2s, transform .15s;
+    }
+    .btn:active { transform: scale(.97); }
+    .btn-primary { background: #a29bfe; color: #fff; }
+    .btn-primary:hover { opacity: .9; }
+    .btn-success { background: #00b894; color: #fff; }
+    .btn-success:hover { opacity: .9; }
+    .btn-outline {
+      background: #f0f0f0;
+      color: var(--text);
+    }
+    .btn-outline:hover { background: #e0e0e0; }
+
+    /* ===== Toast ===== */
+    .toast {
+      position: fixed;
+      bottom: 2rem; left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #1a1a2e;
+      color: #fff;
+      padding: 0.7rem 1.5rem;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-family: var(--font);
+      opacity: 0;
+      transition: opacity .3s, transform .3s;
+      pointer-events: none;
+      z-index: 9999;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 480px) {
+      .content { padding: 0 0.85rem; }
+      .card-main { padding: 1.25rem 1rem; }
+      .char-item { width: 38px; height: 38px; font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-deco bg-deco-1"></div>
+  <div class="bg-deco bg-deco-2"></div>
+  <div class="bg-deco bg-deco-3"></div>
+  <div class="bg-grid"></div>
+
+  <div class="top-bar">
+    <div class="top-bar-inner">
+      <a href="./index.html" class="top-brand">
+        <div class="top-avatar"></div>
+        <div>
+          <div class="top-name">GoodMe</div>
+          <div class="top-tag">个性签名生成器</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="block">
+      <div class="block-label">
+        <span class="block-dot" style="background:#a29bfe"></span>
+        签名编辑
+      </div>
+      <div class="card-main">
+
+        <div class="field-label">输入文字</div>
+        <input id="textInput" type="text" placeholder="输入个性签名内容..." maxlength="50" value="不是挂机，是在思考人生" />
+
+        <div class="char-editor-wrap">
+          <div class="field-label">点击字符更改颜色 <span>· 当前：<span id="selectedHint">未选中</span></span></div>
+          <div class="char-list" id="charList"></div>
+        </div>
+
+        <div class="color-picker-row">
+          <div class="row-label">颜色面板</div>
+          <div class="palette" id="palette"></div>
+        </div>
+
+        <div class="size-row">
+          <label>字号</label>
+          <input type="range" id="sizeSlider" min="10" max="40" value="20" />
+          <span class="size-val" id="sizeVal">20</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-label">
+        <span class="block-dot" style="background:#00b894"></span>
+        预览 & 输出
+      </div>
+      <div class="card-main">
+
+        <div class="preview-wrap">
+          <div class="preview-label">预览效果</div>
+          <div class="preview-box" id="previewBox"></div>
+        </div>
+
+        <div class="output-wrap">
+          <textarea id="outputBox" readonly placeholder="生成的代码将显示在这里..."></textarea>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" id="copyBtn">📋 复制代码</button>
+          <button class="btn btn-outline" id="resetBtn">重置颜色</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const DEFAULT_COLORS = [
+      '#FF99CC', '#FFB299', '#FFCC99', '#FFE599',
+      '#CCFF99', '#99FFB2', '#99FFCC', '#99CCFF',
+      '#B299FF', '#CC99FF', '#E599FF', '#FF6B6B',
+      '#FECA57', '#48DBFB', '#FF9FF3', '#54A0FF',
+      '#00B894', '#FD79A8', '#6C5CE7', '#FDCB6E',
+    ];
+
+    const textInput = document.getElementById('textInput');
+    const charList = document.getElementById('charList');
+    const palette = document.getElementById('palette');
+    const selectedHint = document.getElementById('selectedHint');
+    const previewBox = document.getElementById('previewBox');
+    const outputBox = document.getElementById('outputBox');
+    const sizeSlider = document.getElementById('sizeSlider');
+    const sizeVal = document.getElementById('sizeVal');
+    const copyBtn = document.getElementById('copyBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const toast = document.getElementById('toast');
+
+    let colors = [];
+    let selectedIdx = -1;
+
+    function initColors(text) {
+      colors = text.split('').map((_, i) => DEFAULT_COLORS[i % DEFAULT_COLORS.length]);
+    }
+
+    function render() {
+      const text = textInput.value;
+      if (colors.length !== text.length) initColors(text);
+      renderChars();
+      renderPreview();
+      renderOutput();
+    }
+
+    function renderChars() {
+      const text = textInput.value;
+      charList.innerHTML = '';
+      if (!text) {
+        charList.innerHTML = '<div class="char-empty">请输入文字</div>';
+        return;
+      }
+      text.split('').forEach((ch, i) => {
+        const div = document.createElement('div');
+        div.className = 'char-item' + (i === selectedIdx ? ' active' : '');
+        div.style.background = colors[i] || '#ccc';
+        div.textContent = ch;
+        div.dataset.idx = i;
+        div.addEventListener('click', () => {
+          selectedIdx = i;
+          selectedHint.textContent = ch;
+          renderChars();
+        });
+        charList.appendChild(div);
+      });
+    }
+
+    function renderPalette() {
+      palette.innerHTML = '';
+      DEFAULT_COLORS.forEach(c => {
+        const btn = document.createElement('button');
+        btn.className = 'palette-btn';
+        btn.style.background = c;
+        btn.addEventListener('click', () => {
+          if (selectedIdx < 0 || selectedIdx >= colors.length) return;
+          colors[selectedIdx] = c;
+          renderPreview();
+          renderOutput();
+          renderChars();
+        });
+        palette.appendChild(btn);
+      });
+      const custom = document.createElement('button');
+      custom.className = 'palette-btn custom-color';
+      custom.textContent = '+';
+      custom.title = '自定义颜色';
+      custom.addEventListener('click', () => {
+        if (selectedIdx < 0 || selectedIdx >= colors.length) return;
+        const input = document.createElement('input');
+        input.type = 'color';
+        input.value = colors[selectedIdx];
+        input.addEventListener('input', () => {
+          colors[selectedIdx] = input.value;
+          renderPreview();
+          renderOutput();
+          renderChars();
+        });
+        input.click();
+      });
+      palette.appendChild(custom);
+    }
+
+    function renderPreview() {
+      const text = textInput.value;
+      const size = parseInt(sizeSlider.value);
+      if (!text) { previewBox.innerHTML = ''; return; }
+      let html = '';
+      text.split('').forEach((ch, i) => {
+        html += `<span style="font-size:${size}px;color:${colors[i]||'#000'};font-weight:700">${ch}</span>`;
+      });
+      previewBox.innerHTML = html;
+    }
+
+    function renderOutput() {
+      const text = textInput.value;
+      const size = parseInt(sizeSlider.value);
+      if (!text) { outputBox.value = ''; return; }
+      let code = `[size=${size}]`;
+      text.split('').forEach((ch, i) => {
+        code += `<color='${colors[i]||'#000'}'>${ch}</color>`;
+      });
+      code += '[/size]';
+      outputBox.value = code;
+    }
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(toast._timer);
+      toast._timer = setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    textInput.addEventListener('input', () => {
+      selectedIdx = -1;
+      selectedHint.textContent = '未选中';
+      render();
+    });
+
+    sizeSlider.addEventListener('input', () => {
+      sizeVal.textContent = sizeSlider.value;
+      renderPreview();
+      renderOutput();
+    });
+
+    copyBtn.addEventListener('click', async () => {
+      if (!outputBox.value) { showToast('暂无内容可复制'); return; }
+      try {
+        await navigator.clipboard.writeText(outputBox.value);
+        showToast('已复制到剪贴板');
+      } catch {
+        outputBox.select();
+        document.execCommand('copy');
+        showToast('已复制到剪贴板');
+      }
+    });
+
+    resetBtn.addEventListener('click', () => {
+      initColors(textInput.value);
+      render();
+      showToast('颜色已重置');
+    });
+
+    renderPalette();
+    render();
+  </script>
+</body>
+</html>
