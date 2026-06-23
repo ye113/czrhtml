@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>个性签名生成器 - GoodMe</title>
+  <title>富文本签名生成器 - GoodMe</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -15,11 +15,12 @@
       --text-dim: #636e72;
       --text-muted: #b2bec3;
       --shadow: 0 2px 12px rgba(0,0,0,0.06);
-      --shadow-hover: 0 6px 24px rgba(0,0,0,0.1);
       --radius: 14px;
       --radius-sm: 10px;
       --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      --ease: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --primary: #a29bfe;
+      --success: #00b894;
+      --warning: #fdcb6e;
     }
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -29,7 +30,6 @@
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
       padding-bottom: 2rem;
-      position: relative;
     }
     body::before {
       content: '';
@@ -38,40 +38,9 @@
       background:
         radial-gradient(ellipse 600px 400px at 10% 5%, rgba(15, 139, 141, 0.06), transparent),
         radial-gradient(ellipse 500px 500px at 90% 20%, rgba(255, 107, 107, 0.05), transparent),
-        radial-gradient(ellipse 400px 500px at 50% 95%, rgba(108, 92, 231, 0.05), transparent),
-        radial-gradient(ellipse 300px 300px at 80% 60%, rgba(253, 203, 110, 0.04), transparent);
+        radial-gradient(ellipse 400px 500px at 50% 95%, rgba(108, 92, 231, 0.05), transparent);
       pointer-events: none;
       z-index: 0;
-    }
-    .bg-deco {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(60px);
-      pointer-events: none;
-      z-index: 0;
-    }
-    .bg-deco-1 {
-      width: 300px; height: 300px;
-      background: rgba(15, 139, 141, 0.06);
-      top: -80px; left: -60px;
-      animation: bgFloat 25s ease-in-out infinite;
-    }
-    .bg-deco-2 {
-      width: 250px; height: 250px;
-      background: rgba(255, 107, 107, 0.05);
-      bottom: 10%; right: -40px;
-      animation: bgFloat 20s ease-in-out infinite reverse;
-    }
-    .bg-deco-3 {
-      width: 200px; height: 200px;
-      background: rgba(108, 92, 231, 0.04);
-      top: 50%; left: 50%;
-      animation: bgFloat 22s ease-in-out infinite 5s;
-    }
-    @keyframes bgFloat {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      33% { transform: translate(30px, -20px) scale(1.05); }
-      66% { transform: translate(-20px, 25px) scale(0.95); }
     }
     .bg-grid {
       position: fixed;
@@ -84,23 +53,20 @@
       z-index: 0;
     }
 
-    /* ===== Top Bar ===== */
     .top-bar {
       position: sticky;
       top: 0;
       z-index: 100;
       background: rgba(255,255,255,0.8);
       backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid rgba(0,0,0,0.04);
     }
     .top-bar-inner {
-      max-width: 520px;
+      max-width: 680px;
       margin: 0 auto;
       padding: 0.6rem 1rem;
       display: flex;
       align-items: center;
-      justify-content: space-between;
     }
     .top-brand {
       display: flex;
@@ -116,29 +82,18 @@
       background-size: cover;
       background-position: center;
     }
-    .top-name {
-      font-weight: 700;
-      font-size: 0.9rem;
-      line-height: 1.2;
-    }
-    .top-tag {
-      font-size: 0.7rem;
-      color: var(--text-dim);
-    }
+    .top-name { font-weight: 700; font-size: 0.9rem; }
+    .top-tag { font-size: 0.7rem; color: var(--text-dim); }
 
-    /* ===== Content ===== */
     .content {
-      max-width: 520px;
+      max-width: 680px;
       margin: 0 auto;
       padding: 0 1rem;
       position: relative;
       z-index: 1;
     }
 
-    /* ===== Block ===== */
-    .block {
-      margin-top: 1.25rem;
-    }
+    .block { margin-top: 1.25rem; }
     .block-label {
       display: flex;
       align-items: center;
@@ -150,13 +105,8 @@
       color: var(--text-dim);
       margin-bottom: 0.6rem;
     }
-    .block-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
+    .block-dot { width: 8px; height: 8px; border-radius: 50%; }
 
-    /* ===== Card ===== */
     .card-main {
       background: var(--surface);
       border: 1px solid rgba(0,0,0,0.04);
@@ -165,17 +115,13 @@
       padding: 1.5rem 1.25rem;
     }
 
-    /* ===== Input ===== */
     .field-label {
       font-size: 0.78rem;
       font-weight: 600;
       color: var(--text);
       margin-bottom: 0.5rem;
     }
-    .field-label span {
-      font-weight: 400;
-      color: var(--text-dim);
-    }
+    .field-label span { font-weight: 400; color: var(--text-dim); }
     #textInput {
       width: 100%;
       padding: 0.75rem 1rem;
@@ -186,17 +132,17 @@
       outline: none;
       transition: border-color .2s;
     }
-    #textInput:focus { border-color: #a29bfe; }
+    #textInput:focus { border-color: var(--primary); }
 
-    /* ===== Char Editor ===== */
     .char-editor-wrap { margin-top: 1rem; }
     .char-list {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
+      gap: 4px;
       margin-top: 0.5rem;
-      min-height: 44px;
+      min-height: 48px;
       align-items: center;
+      user-select: none;
     }
     .char-item {
       position: relative;
@@ -209,59 +155,148 @@
       font-weight: 700;
       cursor: pointer;
       border: 2px solid transparent;
-      transition: transform .15s, border-color .15s;
+      transition: transform .15s, border-color .15s, box-shadow .15s;
       user-select: none;
-      color: #fff;
-      text-shadow: 0 1px 2px rgba(0,0,0,.3);
     }
-    .char-item:hover { transform: scale(1.1); }
-    .char-item.active { border-color: #1a1a2e; box-shadow: 0 0 0 2px rgba(26,26,46,.15); }
+    .char-item:hover { transform: scale(1.08); }
+    .char-item.selected {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(162, 155, 254, 0.3);
+      z-index: 1;
+    }
     .char-empty { color: var(--text-muted); font-size: 0.85rem; padding: 10px 0; }
+    .selection-hint {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-top: 0.5rem;
+      min-height: 1.2em;
+    }
 
-    /* ===== Palette ===== */
-    .color-picker-row { margin-top: 1rem; }
-    .color-picker-row .row-label { font-size: 0.78rem; font-weight: 600; color: var(--text); margin-bottom: 0.5rem; }
+    .toolbar {
+      margin-top: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: flex-end;
+    }
+    .toolbar-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .toolbar-group-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .toolbar-row {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+    .tool-btn {
+      width: 36px; height: 36px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      background: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      transition: all .15s;
+      color: var(--text);
+      font-family: var(--font);
+    }
+    .tool-btn:hover { border-color: var(--primary); background: #f8f7ff; }
+    .tool-btn.active {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: #fff;
+    }
+    .tool-btn-wide {
+      width: auto;
+      padding: 0 8px;
+      font-size: 12px;
+    }
+
+    .color-preview {
+      width: 36px; height: 36px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: border-color .15s;
+      position: relative;
+      overflow: hidden;
+    }
+    .color-preview:hover { border-color: var(--primary); }
+    .color-preview input[type="color"] {
+      position: absolute;
+      inset: -4px;
+      width: calc(100% + 8px);
+      height: calc(100% + 8px);
+      border: none;
+      cursor: pointer;
+      opacity: 0;
+    }
+
+    .size-input {
+      width: 55px;
+      height: 36px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: var(--font);
+      outline: none;
+      transition: border-color .15s;
+    }
+    .size-input:focus { border-color: var(--primary); }
+
+    .palette-section { margin-top: 1rem; }
+    .palette-label { font-size: 0.7rem; font-weight: 600; color: var(--text-dim); margin-bottom: 0.4rem; }
     .palette {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
+      gap: 4px;
     }
     .palette-btn {
-      width: 34px; height: 34px;
-      border-radius: 8px;
+      width: 28px; height: 28px;
+      border-radius: 6px;
       border: 2px solid transparent;
       cursor: pointer;
       transition: transform .15s, border-color .15s;
     }
     .palette-btn:hover { transform: scale(1.15); }
-    .palette-btn.custom-color {
-      border: 2px dashed #ccc;
-      background: #f5f5f5;
+    .palette-btn.active-color { border-color: var(--text); }
+
+    .template-list {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 0.5rem;
+    }
+    .template-btn {
+      padding: 6px 12px;
+      border: 1px solid #e0e0e0;
+      border-radius: 20px;
+      background: #fff;
+      font-size: 0.78rem;
+      font-family: var(--font);
       cursor: pointer;
-      color: #999;
-    }
-
-    /* ===== Size ===== */
-    .size-row { margin-top: 1rem; display: flex; align-items: center; gap: 0.75rem; }
-    .size-row label { font-size: 0.78rem; font-weight: 600; color: var(--text); white-space: nowrap; }
-    .size-row input[type="range"] {
-      flex: 1;
-      accent-color: #a29bfe;
-      height: 4px;
-    }
-    .size-val {
-      font-size: 0.85rem;
-      font-weight: 700;
+      transition: all .15s;
       color: var(--text);
-      min-width: 28px;
-      text-align: center;
+    }
+    .template-btn:hover {
+      border-color: var(--primary);
+      background: #f8f7ff;
+      color: var(--primary);
     }
 
-    /* ===== Preview ===== */
     .preview-wrap {
       margin-top: 1rem;
       padding: 1.25rem;
@@ -273,11 +308,10 @@
     .preview-label { font-size: 0.75rem; font-weight: 600; color: var(--text-dim); margin-bottom: 0.6rem; }
     .preview-box {
       word-break: break-all;
-      line-height: 1.6;
+      line-height: 1.8;
       min-height: 40px;
     }
 
-    /* ===== Output ===== */
     .output-wrap { margin-top: 0.75rem; position: relative; }
     .output-wrap textarea {
       width: 100%;
@@ -285,16 +319,16 @@
       padding: 0.75rem;
       border: 2px solid #e0e0e0;
       border-radius: var(--radius-sm);
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       font-family: "Courier New", monospace;
-      resize: none;
+      resize: vertical;
       outline: none;
       background: #fafafa;
       color: var(--text);
+      line-height: 1.5;
     }
-    .output-wrap textarea:focus { border-color: #a29bfe; }
+    .output-wrap textarea:focus { border-color: var(--primary); }
 
-    /* ===== Buttons ===== */
     .btn-row { display: flex; gap: 0.5rem; margin-top: 1rem; }
     .btn {
       flex: 1;
@@ -308,17 +342,11 @@
       transition: opacity .2s, transform .15s;
     }
     .btn:active { transform: scale(.97); }
-    .btn-primary { background: #a29bfe; color: #fff; }
+    .btn-primary { background: var(--primary); color: #fff; }
     .btn-primary:hover { opacity: .9; }
-    .btn-success { background: #00b894; color: #fff; }
-    .btn-success:hover { opacity: .9; }
-    .btn-outline {
-      background: #f0f0f0;
-      color: var(--text);
-    }
+    .btn-outline { background: #f0f0f0; color: var(--text); }
     .btn-outline:hover { background: #e0e0e0; }
 
-    /* ===== Toast ===== */
     .toast {
       position: fixed;
       bottom: 2rem; left: 50%;
@@ -340,14 +368,12 @@
       .content { padding: 0 0.85rem; }
       .card-main { padding: 1.25rem 1rem; }
       .char-item { width: 38px; height: 38px; font-size: 16px; }
+      .tool-btn { width: 32px; height: 32px; font-size: 12px; }
     }
   </style>
 </head>
 <body>
 
-  <div class="bg-deco bg-deco-1"></div>
-  <div class="bg-deco bg-deco-2"></div>
-  <div class="bg-deco bg-deco-3"></div>
   <div class="bg-grid"></div>
 
   <div class="top-bar">
@@ -356,7 +382,7 @@
         <div class="top-avatar"></div>
         <div>
           <div class="top-name">GoodMe</div>
-          <div class="top-tag">个性签名生成器</div>
+          <div class="top-tag">专属个签生成器</div>
         </div>
       </a>
     </div>
@@ -365,54 +391,91 @@
   <div class="content">
     <div class="block">
       <div class="block-label">
-        <span class="block-dot" style="background:#a29bfe"></span>
-        签名编辑
+        <span class="block-dot" style="background:var(--primary)"></span>
+        文字输入
       </div>
       <div class="card-main">
-
-        <div class="field-label">输入文字</div>
-        <input id="textInput" type="text" placeholder="输入个性签名内容..." maxlength="50" value="不是挂机，是在思考人生" />
-
-        <div class="char-editor-wrap">
-          <div class="field-label">点击字符更改颜色 <span>· 当前：<span id="selectedHint">未选中</span></span></div>
-          <div class="char-list" id="charList"></div>
-        </div>
-
-        <div class="color-picker-row">
-          <div class="row-label">颜色面板</div>
-          <div class="palette" id="palette"></div>
-        </div>
-
-        <div class="size-row">
-          <label>字号</label>
-          <input type="range" id="sizeSlider" min="10" max="40" value="20" />
-          <span class="size-val" id="sizeVal">20</span>
-        </div>
-
+        <div class="field-label">输入文字 <span>· 最多50字</span></div>
+        <input id="textInput" type="text" placeholder="输入个性签名内容..." maxlength="50" value="你好，游戏世界！" />
       </div>
     </div>
 
     <div class="block">
       <div class="block-label">
-        <span class="block-dot" style="background:#00b894"></span>
+        <span class="block-dot" style="background:#fd79a8"></span>
+        字符选择 & 样式
+      </div>
+      <div class="card-main">
+        <div class="field-label">点击选择字符 <span>· 按住 Ctrl/Shift 多选</span></div>
+        <div class="char-list" id="charList"></div>
+        <div class="selection-hint" id="selectionHint"></div>
+
+        <div class="toolbar">
+          <div class="toolbar-group">
+            <div class="toolbar-group-label">颜色</div>
+            <div class="toolbar-row">
+              <div class="color-preview" id="colorPreview" style="background:#a29bfe">
+                <input type="color" id="colorPicker" value="#a29bfe" />
+              </div>
+            </div>
+          </div>
+          <div class="toolbar-group">
+            <div class="toolbar-group-label">大小</div>
+            <div class="toolbar-row">
+              <input type="number" class="size-input" id="sizeInput" value="20" min="10" max="60" />
+            </div>
+          </div>
+          <div class="toolbar-group">
+            <div class="toolbar-group-label">样式</div>
+            <div class="toolbar-row">
+              <button class="tool-btn" id="boldBtn" title="加粗"><b>B</b></button>
+              <button class="tool-btn" id="italicBtn" title="斜体"><i>I</i></button>
+              <button class="tool-btn" id="underlineBtn" title="下划线"><u>U</u></button>
+            </div>
+          </div>
+          <div class="toolbar-group">
+            <div class="toolbar-group-label">特殊</div>
+            <div class="toolbar-row">
+              <button class="tool-btn tool-btn-wide" id="supBtn" title="上标（仅支持数字和英文）">X²</button>
+              <button class="tool-btn tool-btn-wide" id="subBtn" title="下标（仅支持数字和英文）">X₂</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="palette-section">
+          <div class="palette-label">快速颜色</div>
+          <div class="palette" id="palette"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-label">
+        <span class="block-dot" style="background:var(--warning)"></span>
+        预设模板
+      </div>
+      <div class="card-main">
+        <div class="template-list" id="templateList"></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-label">
+        <span class="block-dot" style="background:var(--success)"></span>
         预览 & 输出
       </div>
       <div class="card-main">
-
         <div class="preview-wrap">
           <div class="preview-label">预览效果</div>
           <div class="preview-box" id="previewBox"></div>
         </div>
-
         <div class="output-wrap">
           <textarea id="outputBox" readonly placeholder="生成的代码将显示在这里..."></textarea>
         </div>
-
         <div class="btn-row">
-          <button class="btn btn-primary" id="copyBtn">📋 复制代码</button>
-          <button class="btn btn-outline" id="resetBtn">重置颜色</button>
+          <button class="btn btn-primary" id="copyBtn">复制代码</button>
+          <button class="btn btn-outline" id="resetBtn">重置全部</button>
         </div>
-
       </div>
     </div>
   </div>
@@ -421,61 +484,243 @@
 
   <script>
     const DEFAULT_COLORS = [
-      '#FF99CC', '#FFB299', '#FFCC99', '#FFE599',
-      '#CCFF99', '#99FFB2', '#99FFCC', '#99CCFF',
-      '#B299FF', '#CC99FF', '#E599FF', '#FF6B6B',
-      '#FECA57', '#48DBFB', '#FF9FF3', '#54A0FF',
-      '#00B894', '#FD79A8', '#6C5CE7', '#FDCB6E',
+      '#FF6B6B', '#FF99CC', '#FFB299', '#FFCC99', '#FFE599',
+      '#FECA57', '#CCFF99', '#99FFB2', '#00B894', '#99FFCC',
+      '#48DBFB', '#99CCFF', '#54A0FF', '#B299FF', '#CC99FF',
+      '#E599FF', '#FF9FF3', '#6C5CE7', '#FD79A8', '#FDCB6E',
     ];
+
+    const TEMPLATES = [
+      { name: '彩虹渐变', fn: (text) => {
+        const colors = ['#FF6B6B','#FF9F43','#FECA57','#48DBFB','#FF9FF3','#6C5CE7'];
+        return text.split('').map((ch, i) => ({
+          char: ch, color: colors[i % colors.length], size: 20,
+          bold: false, italic: false, underline: false
+        }));
+      }},
+      { name: '梦幻紫粉', fn: (text) => {
+        const colors = ['#a29bfe','#fd79a8','#e056a0','#c56cf0','#a29bfe','#fd79a8'];
+        return text.split('').map((ch, i) => ({
+          char: ch, color: colors[i % colors.length], size: 22,
+          bold: true, italic: false, underline: false
+        }));
+      }},
+      { name: '火焰文字', fn: (text) => {
+        const colors = ['#FF0000','#FF4500','#FF6347','#FF7F50','#FF8C00','#FFA500'];
+        return text.split('').map((ch, i) => ({
+          char: ch, color: colors[i % colors.length], size: 24,
+          bold: true, italic: true, underline: false
+        }));
+      }},
+      { name: '冰霜蓝', fn: (text) => {
+        const colors = ['#00CED1','#48D1CC','#5F9EA0','#87CEEB','#B0E0E6','#ADD8E6'];
+        return text.split('').map((ch, i) => ({
+          char: ch, color: colors[i % colors.length], size: 20,
+          bold: false, italic: false, underline: true
+        }));
+      }},
+      { name: '金色传说', fn: (text) => {
+        return text.split('').map((ch) => ({
+          char: ch, color: '#FFD700', size: 26,
+          bold: true, italic: false, underline: false
+        }));
+      }},
+    ];
+
+    let charData = [];
+    let selectedIndices = new Set();
 
     const textInput = document.getElementById('textInput');
     const charList = document.getElementById('charList');
+    const selectionHint = document.getElementById('selectionHint');
+    const colorPicker = document.getElementById('colorPicker');
+    const colorPreview = document.getElementById('colorPreview');
+    const sizeInput = document.getElementById('sizeInput');
+    const boldBtn = document.getElementById('boldBtn');
+    const italicBtn = document.getElementById('italicBtn');
+    const underlineBtn = document.getElementById('underlineBtn');
     const palette = document.getElementById('palette');
-    const selectedHint = document.getElementById('selectedHint');
+    const templateList = document.getElementById('templateList');
     const previewBox = document.getElementById('previewBox');
     const outputBox = document.getElementById('outputBox');
-    const sizeSlider = document.getElementById('sizeSlider');
-    const sizeVal = document.getElementById('sizeVal');
     const copyBtn = document.getElementById('copyBtn');
     const resetBtn = document.getElementById('resetBtn');
     const toast = document.getElementById('toast');
 
-    let colors = [];
-    let selectedIdx = -1;
-
-    function initColors(text) {
-      colors = text.split('').map((_, i) => DEFAULT_COLORS[i % DEFAULT_COLORS.length]);
-    }
-
-    function render() {
-      const text = textInput.value;
-      if (colors.length !== text.length) initColors(text);
-      renderChars();
-      renderPreview();
-      renderOutput();
+    function initCharData(text) {
+      charData = text.split('').map((ch, i) => ({
+        char: ch,
+        color: DEFAULT_COLORS[i % DEFAULT_COLORS.length],
+        size: 20,
+        bold: false,
+        italic: false,
+        underline: false
+      }));
     }
 
     function renderChars() {
-      const text = textInput.value;
       charList.innerHTML = '';
-      if (!text) {
+      if (!charData.length) {
         charList.innerHTML = '<div class="char-empty">请输入文字</div>';
         return;
       }
-      text.split('').forEach((ch, i) => {
+      charData.forEach((d, i) => {
         const div = document.createElement('div');
-        div.className = 'char-item' + (i === selectedIdx ? ' active' : '');
-        div.style.background = colors[i] || '#ccc';
-        div.textContent = ch;
+        div.className = 'char-item' + (selectedIndices.has(i) ? ' selected' : '');
+        div.style.background = d.color;
+        div.style.color = '#fff';
+        div.style.fontSize = Math.min(d.size, 22) + 'px';
+        div.style.fontWeight = d.bold ? '800' : '600';
+        div.style.fontStyle = d.italic ? 'italic' : 'normal';
+        div.style.textDecoration = d.underline ? 'underline' : 'none';
+        div.textContent = d.char;
         div.dataset.idx = i;
-        div.addEventListener('click', () => {
-          selectedIdx = i;
-          selectedHint.textContent = ch;
-          renderChars();
-        });
+        div.addEventListener('click', (e) => handleCharClick(i, e));
         charList.appendChild(div);
       });
+      updateSelectionHint();
+      updateToolbarState();
     }
+
+    function handleCharClick(idx, event) {
+      if (event.ctrlKey || event.metaKey) {
+        if (selectedIndices.has(idx)) {
+          selectedIndices.delete(idx);
+        } else {
+          selectedIndices.add(idx);
+        }
+      } else if (event.shiftKey && selectedIndices.size > 0) {
+        const last = Math.max(...selectedIndices);
+        const start = Math.min(last, idx);
+        const end = Math.max(last, idx);
+        for (let i = start; i <= end; i++) {
+          selectedIndices.add(i);
+        }
+      } else {
+        selectedIndices.clear();
+        selectedIndices.add(idx);
+      }
+      renderChars();
+    }
+
+    function updateSelectionHint() {
+      if (selectedIndices.size === 0) {
+        selectionHint.textContent = '未选中任何字符';
+      } else if (selectedIndices.size === 1) {
+        const idx = [...selectedIndices][0];
+        selectionHint.textContent = `已选中: "${charData[idx].char}"`;
+      } else {
+        selectionHint.textContent = `已选中 ${selectedIndices.size} 个字符`;
+      }
+    }
+
+    function updateToolbarState() {
+      if (selectedIndices.size === 0) return;
+      const firstIdx = [...selectedIndices][0];
+      const first = charData[firstIdx];
+
+      let uniformColor = first.color;
+      let uniformSize = first.size;
+      let uniformBold = first.bold;
+      let uniformItalic = first.italic;
+      let uniformUnderline = first.underline;
+
+      selectedIndices.forEach(idx => {
+        const d = charData[idx];
+        if (d.color !== uniformColor) uniformColor = '';
+        if (d.size !== uniformSize) uniformSize = 0;
+        if (d.bold !== uniformBold) uniformBold = false;
+        if (d.italic !== uniformItalic) uniformItalic = false;
+        if (d.underline !== uniformUnderline) uniformUnderline = false;
+      });
+
+      colorPreview.style.background = uniformColor || '#ccc';
+      colorPicker.value = uniformColor || '#a29bfe';
+      sizeInput.value = uniformSize || '';
+      boldBtn.classList.toggle('active', uniformBold);
+      italicBtn.classList.toggle('active', uniformItalic);
+      underlineBtn.classList.toggle('active', uniformUnderline);
+    }
+
+    function applyStyle(prop, value) {
+      if (selectedIndices.size === 0) {
+        showToast('请先选中字符');
+        return;
+      }
+      selectedIndices.forEach(idx => {
+        charData[idx][prop] = value;
+      });
+      renderPreview();
+      renderOutput();
+      renderChars();
+    }
+
+    colorPicker.addEventListener('input', () => {
+      colorPreview.style.background = colorPicker.value;
+      applyStyle('color', colorPicker.value);
+    });
+
+    sizeInput.addEventListener('change', () => {
+      let val = parseInt(sizeInput.value);
+      if (isNaN(val) || val < 10) val = 10;
+      if (val > 60) val = 60;
+      sizeInput.value = val;
+      applyStyle('size', val);
+    });
+
+    boldBtn.addEventListener('click', () => applyStyle('bold', !boldBtn.classList.contains('active')));
+    italicBtn.addEventListener('click', () => applyStyle('italic', !italicBtn.classList.contains('active')));
+    underlineBtn.addEventListener('click', () => applyStyle('underline', !underlineBtn.classList.contains('active')));
+
+    // Unicode 上标/下标映射
+    const SUPER_MAP = {
+      '0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹',
+      'a':'ᵃ','b':'ᵇ','c':'ᶜ','d':'ᵈ','e':'ᵉ','f':'ᶠ','g':'ᵍ','h':'ʰ','i':'ⁱ','j':'ʲ',
+      'k':'ᵏ','l':'ˡ','m':'ᵐ','n':'ⁿ','o':'ᵒ','p':'ᵖ','q':'q','r':'ʳ','s':'ˢ','t':'ᵗ',
+      'u':'ᵘ','v':'ᵛ','w':'ʷ','x':'ˣ','y':'ʸ','z':'ᶻ',
+      'A':'ᴬ','B':'ᴮ','C':'ᶜ','D':'ᴰ','E':'ᴱ','F':'ᶠ','G':'ᴳ','H':'ᴴ','I':'ᴵ','J':'ᴶ',
+      'K':'ᴷ','L':'ᴸ','M':'ᴹ','N':'ᴺ','O':'ᴼ','P':'ᴾ','Q':'Q','R':'ᴿ','S':'ˢ','T':'ᵀ',
+      'U':'ᵁ','V':'ⱽ','W':'ᵂ','X':'ˣ','Y':'ʸ','Z':'ᶻ',
+      '+':'⁺','-':'⁻','=':'₌','(':'⁽',')':'⁾','n':'ⁿ','i':'ⁱ',
+      // 下标转上标
+      '₀':'⁰','₁':'¹','₂':'²','₃':'³','₄':'⁴','₅':'⁵','₆':'⁶','₇':'⁷','₈':'⁸','₉':'⁹',
+      'ₐ':'ᵃ','ₑ':'ᵉ','ₕ':'ʰ','ᵢ':'ⁱ','ⱼ':'ʲ','ₖ':'ᵏ','ₗ':'ˡ','ₘ':'ᵐ','ₙ':'ⁿ','ₒ':'ᵒ',
+      'ₚ':'ᵖ','ᵣ':'ʳ','ₛ':'ˢ','ₜ':'ᵗ','ᵤ':'ᵘ','ᵥ':'ᵛ','ₓ':'ˣ',
+      '₊':'⁺','₋':'⁻','₌':'₌','₍':'⁽','₎':'⁾'
+    };
+    const SUB_MAP = {
+      '0':'₀','1':'₁','2':'₂','3':'₃','4':'₄','5':'₅','6':'₆','7':'₇','8':'₈','9':'₉',
+      'a':'ₐ','e':'ₑ','h':'ₕ','i':'ᵢ','j':'ⱼ','k':'ₖ','l':'ₗ','m':'ₘ','n':'ₙ','o':'ₒ',
+      'p':'ₚ','r':'ᵣ','s':'ₛ','t':'ₜ','u':'ᵤ','v':'ᵥ','x':'ₓ',
+      '+':'₊','-':'₋','=':'₌','(':'₍',')':'₎',
+      // 上标转下标
+      '⁰':'₀','¹':'₁','²':'₂','³':'₃','⁴':'₄','⁵':'₅','⁶':'₆','⁷':'₇','⁸':'₈','⁹':'₉',
+      'ᵃ':'ₐ','ᵉ':'ₑ','ʰ':'ₕ','ⁱ':'ᵢ','ʲ':'ⱼ','ᵏ':'ₖ','ˡ':'ₗ','ᵐ':'ₘ','ⁿ':'ₙ','ᵒ':'ₒ',
+      'ᵖ':'ₚ','ʳ':'ᵣ','ˢ':'ₛ','ᵗ':'ᵗ','ᵘ':'ᵤ','ᵛ':'ᵥ','ˣ':'ₓ',
+      '⁺':'₊','⁻':'₋','₌':'₌','⁽':'₍','⁾':'₎'
+    };
+
+    function convertChar(ch, map) {
+      return map[ch] || ch; // 没有映射的字符保持原样
+    }
+
+    function applySupSub(type) {
+      if (selectedIndices.size === 0) {
+        showToast('请先选中字符');
+        return;
+      }
+      const map = type === 'sup' ? SUPER_MAP : SUB_MAP;
+      selectedIndices.forEach(idx => {
+        charData[idx].char = convertChar(charData[idx].char, map);
+      });
+      // 同步更新输入框
+      textInput.value = charData.map(d => d.char).join('');
+      renderAll();
+      showToast(type === 'sup' ? '已转为上标' : '已转为下标');
+    }
+
+    document.getElementById('supBtn').addEventListener('click', () => applySupSub('sup'));
+    document.getElementById('subBtn').addEventListener('click', () => applySupSub('sub'));
 
     function renderPalette() {
       palette.innerHTML = '';
@@ -484,55 +729,119 @@
         btn.className = 'palette-btn';
         btn.style.background = c;
         btn.addEventListener('click', () => {
-          if (selectedIdx < 0 || selectedIdx >= colors.length) return;
-          colors[selectedIdx] = c;
-          renderPreview();
-          renderOutput();
-          renderChars();
+          colorPreview.style.background = c;
+          colorPicker.value = c;
+          applyStyle('color', c);
         });
         palette.appendChild(btn);
       });
-      const custom = document.createElement('button');
-      custom.className = 'palette-btn custom-color';
-      custom.textContent = '+';
-      custom.title = '自定义颜色';
-      custom.addEventListener('click', () => {
-        if (selectedIdx < 0 || selectedIdx >= colors.length) return;
-        const input = document.createElement('input');
-        input.type = 'color';
-        input.value = colors[selectedIdx];
-        input.addEventListener('input', () => {
-          colors[selectedIdx] = input.value;
-          renderPreview();
-          renderOutput();
-          renderChars();
+    }
+
+    function renderTemplates() {
+      templateList.innerHTML = '';
+      TEMPLATES.forEach(t => {
+        const btn = document.createElement('button');
+        btn.className = 'template-btn';
+        btn.textContent = t.name;
+        btn.addEventListener('click', () => {
+          const text = textInput.value;
+          if (!text) { showToast('请先输入文字'); return; }
+          charData = t.fn(text);
+          selectedIndices.clear();
+          renderAll();
+          showToast(`已应用模板: ${t.name}`);
         });
-        input.click();
+        templateList.appendChild(btn);
       });
-      palette.appendChild(custom);
     }
 
     function renderPreview() {
-      const text = textInput.value;
-      const size = parseInt(sizeSlider.value);
-      if (!text) { previewBox.innerHTML = ''; return; }
-      let html = '';
-      text.split('').forEach((ch, i) => {
-        html += `<span style="font-size:${size}px;color:${colors[i]||'#000'};font-weight:700">${ch}</span>`;
+      previewBox.innerHTML = '';
+      if (!charData.length) return;
+      charData.forEach(d => {
+        const span = document.createElement('span');
+        span.style.color = d.color;
+        span.style.fontSize = d.size + 'px';
+        span.style.fontWeight = d.bold ? '800' : '400';
+        span.style.fontStyle = d.italic ? 'italic' : 'normal';
+        span.style.textDecoration = d.underline ? 'underline' : 'none';
+        span.textContent = d.char;
+        previewBox.appendChild(span);
       });
-      previewBox.innerHTML = html;
     }
 
     function renderOutput() {
-      const text = textInput.value;
-      const size = parseInt(sizeSlider.value);
-      if (!text) { outputBox.value = ''; return; }
-      let code = `[size=${size}]`;
-      text.split('').forEach((ch, i) => {
-        code += `<color='${colors[i]||'#000'}'>${ch}</color>`;
+      if (!charData.length) { outputBox.value = ''; return; }
+
+      // 按样式分组连续字符
+      let groups = [];
+      let currentGroup = { chars: [charData[0]], styles: { ...charData[0] } };
+
+      for (let i = 1; i < charData.length; i++) {
+        const prev = charData[i - 1];
+        const curr = charData[i];
+        // 检查除颜色外的样式是否相同
+        if (prev.size === curr.size && prev.bold === curr.bold &&
+            prev.italic === curr.italic && prev.underline === curr.underline) {
+          currentGroup.chars.push(curr);
+        } else {
+          groups.push(currentGroup);
+          currentGroup = { chars: [curr], styles: { ...curr } };
+        }
+      }
+      groups.push(currentGroup);
+
+      let code = '';
+      groups.forEach(group => {
+        const s = group.styles;
+        let outerOpen = [];
+        let outerClose = [];
+
+        // 外层样式：大小、加粗、斜体、下划线
+        if (s.size !== 20) {
+          outerOpen.push(`<size=${s.size}>`);
+          outerClose.unshift('</size>');
+        }
+        if (s.bold) { outerOpen.push('<b>'); outerClose.unshift('</b>'); }
+        if (s.italic) { outerOpen.push('<i>'); outerClose.unshift('</i>'); }
+        if (s.underline) { outerOpen.push('<u>'); outerClose.unshift('</u>'); }
+
+        code += outerOpen.join('');
+
+        // 内层：合并连续相同颜色的字符
+        let colorGroups = [];
+        let currentColorGroup = { color: group.chars[0].color, text: group.chars[0].char };
+        for (let j = 1; j < group.chars.length; j++) {
+          if (group.chars[j].color === currentColorGroup.color) {
+            currentColorGroup.text += group.chars[j].char;
+          } else {
+            colorGroups.push(currentColorGroup);
+            currentColorGroup = { color: group.chars[j].color, text: group.chars[j].char };
+          }
+        }
+        colorGroups.push(currentColorGroup);
+
+        colorGroups.forEach(cg => {
+          code += `<color='${cg.color}'>${cg.text}</color>`;
+        });
+
+        code += outerClose.join('');
       });
-      code += '[/size]';
+
       outputBox.value = code;
+    }
+
+    function resetAll() {
+      initCharData(textInput.value);
+      selectedIndices.clear();
+      renderAll();
+      showToast('已重置全部样式');
+    }
+
+    function renderAll() {
+      renderChars();
+      renderPreview();
+      renderOutput();
     }
 
     function showToast(msg) {
@@ -543,15 +852,9 @@
     }
 
     textInput.addEventListener('input', () => {
-      selectedIdx = -1;
-      selectedHint.textContent = '未选中';
-      render();
-    });
-
-    sizeSlider.addEventListener('input', () => {
-      sizeVal.textContent = sizeSlider.value;
-      renderPreview();
-      renderOutput();
+      initCharData(textInput.value);
+      selectedIndices.clear();
+      renderAll();
     });
 
     copyBtn.addEventListener('click', async () => {
@@ -566,14 +869,12 @@
       }
     });
 
-    resetBtn.addEventListener('click', () => {
-      initColors(textInput.value);
-      render();
-      showToast('颜色已重置');
-    });
+    resetBtn.addEventListener('click', resetAll);
 
     renderPalette();
-    render();
+    renderTemplates();
+    initCharData(textInput.value);
+    renderAll();
   </script>
 </body>
 </html>
