@@ -601,6 +601,21 @@ footer p {
   font-size: 0.9rem;
 }
 
+.qq-link {
+  display: inline-block;
+  margin-top: 0.3rem;
+  color: #12B7F5;
+  text-decoration: none;
+  border-bottom: 1px dashed #12B7F5;
+  padding-bottom: 1px;
+  transition: var(--ease);
+}
+
+.qq-link:hover {
+  color: #0d9cd8;
+  border-bottom-style: solid;
+}
+
 /* ===== Floating Particles ===== */
 canvas {
   position: fixed;
