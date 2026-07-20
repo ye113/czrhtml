@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>音频文件 - GoodMe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f0f2f5;
+      --surface: #ffffff;
+      --text: #1a1a2e;
+      --text-dim: #636e72;
+      --text-muted: #b2bec3;
+      --shadow: 0 2px 12px rgba(0,0,0,0.06);
+      --shadow-hover: 0 6px 24px rgba(0,0,0,0.1);
+      --radius: 14px;
+      --radius-sm: 10px;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --ease: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: 2rem;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 600px 400px at 10% 5%, rgba(15, 139, 141, 0.06), transparent),
+        radial-gradient(ellipse 500px 500px at 90% 20%, rgba(255, 107, 107, 0.05), transparent),
+        radial-gradient(ellipse 400px 500px at 50% 95%, rgba(108, 92, 231, 0.05), transparent);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.8);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+    }
+    .top-bar-inner {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0.6rem 1rem;
+      display: flex;
+      align-items: center;
+    }
+    .top-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .top-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background-image: url(./assets/images/avatar.jpg);
+      background-size: cover;
+      background-position: center;
+    }
+    .top-name { font-weight: 700; font-size: 0.9rem; }
+    .top-tag { font-size: 0.7rem; color: var(--text-dim); }
+
+    .content {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .block { margin-top: 1.25rem; }
+    .block-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+      margin-bottom: 0.6rem;
+    }
+    .block-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+    .audio-card {
+      background: var(--surface);
+      border: 1px solid rgba(0,0,0,0.04);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+      padding: 0.6rem 1rem;
+      transition: var(--ease);
+    }
+    .audio-card + .audio-card {
+      margin-top: 0.5rem;
+    }
+    .audio-card:hover {
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(0,0,0,0.08);
+    }
+    .audio-card.playing {
+      border-color: rgba(255,107,107,0.25);
+      background: rgba(255,107,107,0.02);
+    }
+
+    .audio-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .audio-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+      background: #f0f2f5;
+    }
+
+    .audio-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .audio-name {
+      font-weight: 600;
+      font-size: 0.88rem;
+      line-height: 1.3;
+    }
+    .audio-meta {
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      margin-top: 0.05rem;
+    }
+
+    .audio-btn {
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 9px;
+      background: #f8f9fa;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: var(--ease);
+      color: var(--text-dim);
+      text-decoration: none;
+      font-family: var(--font);
+      flex-shrink: 0;
+    }
+    .audio-btn:hover {
+      background: #eef0f2;
+      color: var(--text);
+      border-color: rgba(0,0,0,0.1);
+    }
+    .audio-btn.play-btn.playing {
+      background: #ff6b6b;
+      border-color: #ff6b6b;
+      color: #fff;
+    }
+    .audio-btn.download-btn:hover {
+      background: #a29bfe;
+      border-color: #a29bfe;
+      color: #fff;
+    }
+
+    .audio-progress-wrap {
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.4rem;
+      padding-left: 3.25rem;
+    }
+    .audio-card.playing .audio-progress-wrap {
+      display: flex;
+    }
+    .audio-progress {
+      flex: 1;
+    }
+    .audio-progress input[type="range"] {
+      width: 100%;
+      height: 3px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: #e0e0e0;
+      border-radius: 2px;
+      outline: none;
+    }
+    .audio-progress input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ff6b6b;
+      cursor: pointer;
+      border: none;
+    }
+    .audio-progress input[type="range"]::-moz-range-thumb {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ff6b6b;
+      cursor: pointer;
+      border: none;
+    }
+    .audio-time {
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      min-width: 65px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-muted);
+    }
+    .empty-state-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .empty-state-text {
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 480px) {
+      .content { padding: 0 0.85rem; }
+      .audio-card { padding: 0.5rem 0.75rem; }
+      .audio-row { gap: 0.5rem; }
+      .audio-icon { width: 34px; height: 34px; font-size: 0.85rem; }
+      .audio-btn { width: 30px; height: 30px; font-size: 0.8rem; }
+      .audio-progress-wrap { padding-left: 2.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-grid"></div>
+
+  <div class="top-bar">
+    <div class="top-bar-inner">
+      <a href="./index.html" class="top-brand">
+        <div class="top-avatar"></div>
+        <div>
+          <div class="top-name">GoodMe</div>
+          <div class="top-tag">音频文件</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="block">
+      <div class="block-label">
+        <span class="block-dot" style="background:#fab1a0"></span>
+        音频列表
+      </div>
+      <div id="audioList"></div>
+    </div>
+  </div>
+
+  <audio id="player"></audio>
+
+  <script>
+    var audioFiles = [
+      { name: '瓦罗兰特-击杀音效 1', file: './assets/music/killsounds/kill_1.wav', size: 'wav' },
+      { name: '瓦罗兰特-击杀音效 2', file: './assets/music/killsounds/kill_2.wav', size: 'wav' },
+      { name: '瓦罗兰特-击杀音效 3', file: './assets/music/killsounds/kill_3.wav', size: 'wav' },
+      { name: '瓦罗兰特-击杀音效 4', file: './assets/music/killsounds/kill_4.wav', size: 'wav' },
+      { name: '瓦罗兰特-击杀音效 5', file: './assets/music/killsounds/kill_5.wav', size: 'wav' },
+      { name: '迷你世界-击杀音效 1', file: './assets/music/mini/kill_1.wav', size: 'wav' },
+      { name: '迷你世界-击杀音效 2', file: './assets/music/mini/kill_2.wav', size: 'wav' },
+      { name: '迷你世界-击杀音效 3', file: './assets/music/mini/kill_3.wav', size: 'wav' },
+      { name: '迷你世界-击杀音效 4', file: './assets/music/mini/kill_4.wav', size: 'wav' },
+      { name: '迷你世界-击杀音效 5', file: './assets/music/mini/kill_5.wav', size: 'wav' },
+      { name: '迷你世界-击杀音效 6', file: './assets/music/mini/kill_6.wav', size: 'wav' },
+      { name: '擦皮鞋', file: './assets/music/擦皮鞋.mp3', size: 'mp3' },
+      { name: '零容忍', file: './assets/music/零容忍.mp3', size: 'mp3' },
+    ];
+
+    var player = document.getElementById('player');
+    var audioList = document.getElementById('audioList');
+    var currentIdx = -1;
+
+    function formatTime(seconds) {
+      if (isNaN(seconds)) return '0:00';
+      var m = Math.floor(seconds / 60);
+      var s = Math.floor(seconds % 60);
+      return m + ':' + (s < 10 ? '0' : '') + s;
+    }
+
+    function downloadFile(url, filename) {
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    function renderList() {
+      audioList.innerHTML = '';
+      if (audioFiles.length === 0) {
+        audioList.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🎵</div><div class="empty-state-text">暂无音频文件</div></div>';
+        return;
+      }
+      audioFiles.forEach(function (item, idx) {
+        var card = document.createElement('div');
+        card.className = 'audio-card' + (idx === currentIdx ? ' playing' : '');
+        card.dataset.idx = idx;
+
+        var row = document.createElement('div');
+        row.className = 'audio-row';
+
+        var icon = document.createElement('div');
+        icon.className = 'audio-icon';
+        icon.textContent = '🎵';
+
+        var info = document.createElement('div');
+        info.className = 'audio-info';
+        var name = document.createElement('div');
+        name.className = 'audio-name';
+        name.textContent = item.name;
+        var meta = document.createElement('div');
+        meta.className = 'audio-meta';
+        meta.textContent = item.size.toUpperCase();
+        info.appendChild(name);
+        info.appendChild(meta);
+
+        var playBtn = document.createElement('button');
+        playBtn.className = 'audio-btn play-btn' + (idx === currentIdx && !player.paused ? ' playing' : '');
+        playBtn.textContent = (idx === currentIdx && !player.paused) ? '⏸' : '▶';
+        playBtn.addEventListener('click', function () {
+          togglePlay(idx);
+        });
+
+        var dlBtn = document.createElement('button');
+        dlBtn.className = 'audio-btn download-btn';
+        dlBtn.textContent = '⬇';
+        dlBtn.addEventListener('click', function () {
+          downloadFile(item.file, item.file.split('/').pop());
+        });
+
+        row.appendChild(icon);
+        row.appendChild(info);
+        row.appendChild(playBtn);
+        row.appendChild(dlBtn);
+        card.appendChild(row);
+
+        var progWrap = document.createElement('div');
+        progWrap.className = 'audio-progress-wrap';
+        var prog = document.createElement('div');
+        prog.className = 'audio-progress';
+        var range = document.createElement('input');
+        range.type = 'range';
+        range.min = 0;
+        range.max = 100;
+        range.value = 0;
+        range.dataset.idx = idx;
+        range.addEventListener('input', function () {
+          if (player.duration) {
+            player.currentTime = (range.value / 100) * player.duration;
+          }
+        });
+        prog.appendChild(range);
+        var time = document.createElement('div');
+        time.className = 'audio-time';
+        time.textContent = '0:00 / 0:00';
+        progWrap.appendChild(prog);
+        progWrap.appendChild(time);
+        card.appendChild(progWrap);
+
+        audioList.appendChild(card);
+      });
+    }
+
+    function togglePlay(idx) {
+      var file = audioFiles[idx];
+      if (currentIdx === idx && !player.paused) {
+        player.pause();
+      } else {
+        currentIdx = idx;
+        player.src = file.file;
+        player.play();
+      }
+    }
+
+    player.addEventListener('play', function () {
+      var cards = audioList.querySelectorAll('.audio-card');
+      cards.forEach(function (c, i) {
+        c.classList.toggle('playing', i === currentIdx);
+        var btn = c.querySelector('.play-btn');
+        if (btn) btn.textContent = i === currentIdx ? '⏸' : '▶';
+        var existing = c.querySelector('.play-btn.playing');
+        if (existing) existing.classList.remove('playing');
+        if (i === currentIdx) btn.classList.add('playing');
+      });
+    });
+
+    player.addEventListener('pause', function () {
+      var cards = audioList.querySelectorAll('.audio-card');
+      cards.forEach(function (c, i) {
+        var btn = c.querySelector('.play-btn');
+        if (btn && i === currentIdx) {
+          btn.textContent = '▶';
+          btn.classList.remove('playing');
+        }
+      });
+    });
+
+    player.addEventListener('timeupdate', function () {
+      var cards = audioList.querySelectorAll('.audio-card');
+      cards.forEach(function (c, i) {
+        if (i !== currentIdx) return;
+        var time = c.querySelector('.audio-time');
+        var range = c.querySelector('.audio-progress input');
+        if (time) time.textContent = formatTime(player.currentTime) + ' / ' + formatTime(player.duration);
+        if (range && player.duration) range.value = (player.currentTime / player.duration) * 100;
+      });
+    });
+
+    player.addEventListener('ended', function () {
+      currentIdx = -1;
+    });
+
+    renderList();
+  </script>
+</body>
+</html>
