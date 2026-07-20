@@ -252,6 +252,43 @@
       font-size: 0.85rem;
     }
 
+    .more-link {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.85rem 1rem;
+      background: var(--surface);
+      border: 1px solid rgba(0,0,0,0.04);
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      color: var(--text);
+      transition: var(--ease);
+      box-shadow: var(--shadow);
+    }
+    .more-link:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-2px);
+      border-color: rgba(0,0,0,0.08);
+    }
+    .more-link-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .more-link-text {
+      flex: 1;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .more-link-arrow {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      transition: var(--ease);
+    }
+    .more-link:hover .more-link-arrow {
+      color: #ff6b6b;
+      transform: translateX(3px);
+    }
+
     @media (max-width: 480px) {
       .content { padding: 0 0.85rem; }
       .audio-card { padding: 0.5rem 0.75rem; }
@@ -285,6 +322,19 @@
         音频列表
       </div>
       <div id="audioList"></div>
+    </div>
+
+    <div class="block">
+      <a href="https://samplelib.com/zh/sample-wav.html" class="more-link" target="_blank" rel="noopener noreferrer">
+        <span class="more-link-icon">🔗</span>
+        <span class="more-link-text">更多推荐</span>
+        <span class="more-link-arrow">→</span>
+      </a>
+      <a href="https://wwbeq.lanzoub.com/b019w0t9vi" class="more-link" target="_blank" rel="noopener noreferrer" style="margin-top:0.5rem">
+        <span class="more-link-icon">📦</span>
+        <span class="more-link-text">GM音频库 <span style="font-weight:400;color:var(--text-dim)">密码 888</span></span>
+        <span class="more-link-arrow">→</span>
+      </a>
     </div>
   </div>
 
