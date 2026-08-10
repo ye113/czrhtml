@@ -1,4 +1,27 @@
 document.addEventListener('DOMContentLoaded', function () {
+  /* ===== Secret admin entry: click top-left brand/avatar 3 times ===== */
+  var topBrand = document.querySelector('.top-brand');
+  var topAvatar = document.getElementById('top-avatar') || (topBrand && topBrand.querySelector('.top-avatar'));
+  var adminEntry = topAvatar || topBrand;
+  if (adminEntry) {
+    var avatarClicks = 0;
+    var avatarClickTimer = null;
+    adminEntry.style.cursor = 'pointer';
+    adminEntry.addEventListener('click', function (e) {
+      e.preventDefault();
+      avatarClicks += 1;
+      clearTimeout(avatarClickTimer);
+      if (avatarClicks >= 3) {
+        avatarClicks = 0;
+        window.location.href = 'admin-status.html';
+        return;
+      }
+      avatarClickTimer = setTimeout(function () {
+        avatarClicks = 0;
+      }, 2500);
+    });
+  }
+
   /* ===== Hero Random Anime Image ===== */
   var heroImg = document.getElementById('hero-img');
   if (heroImg) {

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>离线模式开关 | GoodMe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="./assets/images/avatar.jpg" type="image/jpeg" />
+  <style>
+    :root {
+      --bg: #f0f2f5;
+      --surface: #ffffff;
+      --text: #1a1a2e;
+      --text-dim: #636e72;
+      --accent: #0f8b8d;
+      --danger: #e17055;
+      --radius: 14px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.06);
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.75rem;
+    }
+    h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+    }
+    .sub {
+      color: var(--text-dim);
+      font-size: 0.875rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+    input[type="password"] {
+      width: 100%;
+      border: 1px solid #dfe6e9;
+      border-radius: 10px;
+      padding: 0.75rem 0.9rem;
+      font: inherit;
+      margin-bottom: 1.25rem;
+      outline: none;
+    }
+    input[type="password"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(15, 139, 141, 0.15);
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.9rem 0;
+      border-top: 1px solid #f1f2f6;
+      border-bottom: 1px solid #f1f2f6;
+      margin-bottom: 1.25rem;
+    }
+    .row-text strong { display: block; font-size: 0.95rem; }
+    .row-text span { color: var(--text-dim); font-size: 0.8rem; }
+    .switch {
+      position: relative;
+      width: 52px;
+      height: 30px;
+      flex-shrink: 0;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      inset: 0;
+      background: #dfe6e9;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .slider::before {
+      content: '';
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      left: 3px;
+      top: 3px;
+      background: #fff;
+      border-radius: 50%;
+      transition: 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .switch input:checked + .slider {
+      background: var(--accent);
+    }
+    .switch input:checked + .slider::before {
+      transform: translateX(22px);
+    }
+    .actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+    button {
+      flex: 1;
+      border: none;
+      border-radius: 10px;
+      padding: 0.8rem 1rem;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-secondary {
+      background: #eceff1;
+      color: var(--text);
+    }
+    .status {
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: var(--text-dim);
+      min-height: 2.6em;
+    }
+    .status.ok { color: var(--accent); }
+    .status.err { color: var(--danger); }
+    .meta {
+      margin-top: 0.75rem;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>离线模式开关</h1>
+    <p class="sub">修改后写入 Cloudflare KV，其他后端下次请求 <code>/api/status</code> 即可读到新值。</p>
+
+    <label for="password">管理密码</label>
+    <input id="password" type="password" autocomplete="current-password" placeholder="STATUS_PASSWORD" />
+
+    <div class="row">
+      <div class="row-text">
+        <strong>离线模式</strong>
+        <span id="mode-label">当前：读取中…</span>
+      </div>
+      <label class="switch" title="切换离线模式">
+        <input id="offline" type="checkbox" />
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn-secondary" id="refresh-btn">刷新</button>
+      <button type="button" class="btn-primary" id="save-btn">保存</button>
+    </div>
+
+    <div class="status" id="message"></div>
+    <div class="meta" id="meta"></div>
+  </div>
+
+  <script>
+    (function () {
+      var passwordInput = document.getElementById('password');
+      var offlineInput = document.getElementById('offline');
+      var modeLabel = document.getElementById('mode-label');
+      var messageEl = document.getElementById('message');
+      var metaEl = document.getElementById('meta');
+      var refreshBtn = document.getElementById('refresh-btn');
+      var saveBtn = document.getElementById('save-btn');
+
+      function setMessage(text, type) {
+        messageEl.textContent = text || '';
+        messageEl.className = 'status' + (type ? ' ' + type : '');
+      }
+
+      function applyStatus(data) {
+        offlineInput.checked = Boolean(data.offline);
+        modeLabel.textContent = data.offline ? '当前：已开启离线' : '当前：在线';
+        metaEl.textContent = data.updatedAt
+          ? 'updatedAt: ' + data.updatedAt
+          : 'updatedAt: （尚未设置，默认在线）';
+      }
+
+      async function refresh() {
+        setMessage('正在读取…');
+        try {
+          var res = await fetch('/api/status', { cache: 'no-store' });
+          var data = await res.json();
+          if (!res.ok) {
+            throw new Error(data.error || ('HTTP ' + res.status));
+          }
+          applyStatus(data);
+          setMessage('已同步当前状态', 'ok');
+        } catch (err) {
+          setMessage('读取失败：' + err.message, 'err');
+        }
+      }
+
+      async function save() {
+        var password = passwordInput.value;
+        if (!password) {
+          setMessage('请先填写管理密码', 'err');
+          return;
+        }
+
+        saveBtn.disabled = true;
+        setMessage('正在保存…');
+        try {
+          var res = await fetch('/api/status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            cache: 'no-store',
+            body: JSON.stringify({
+              password: password,
+              offline: offlineInput.checked
+            })
+          });
+          var data = await res.json();
+          if (!res.ok) {
+            throw new Error(data.error || ('HTTP ' + res.status));
+          }
+          applyStatus(data);
+          setMessage('已保存并立即生效', 'ok');
+        } catch (err) {
+          setMessage('保存失败：' + err.message, 'err');
+        } finally {
+          saveBtn.disabled = false;
+        }
+      }
+
+      refreshBtn.addEventListener('click', refresh);
+      saveBtn.addEventListener('click', save);
+      refresh();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+# Optional local/dev alignment for Cloudflare Pages.
+# Production deploy path remains: GitHub push → Pages auto deploy.
+# KV binding and STATUS_PASSWORD should also be configured in the Pages dashboard.
+
+name = "czrhtml"
+compatibility_date = "2024-11-01"
+pages_build_output_dir = "."
+
+# After creating the KV namespace in Cloudflare, paste its id below
+# (or bind STATUS_KV only via Pages → Settings → Functions → KV namespace bindings).
+# [[kv_namespaces]]
+# binding = "STATUS_KV"
+# id = "your_kv_namespace_id"

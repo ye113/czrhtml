@@ -105,18 +105,22 @@ body::before {
   justify-content: space-between;
 }
 
-.top-brand {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
 .top-avatar {
   width: 36px;
   height: 36px;
   border-radius: 50%;
   background-size: cover;
   background-position: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.top-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  user-select: none;
 }
 
 .top-name {
