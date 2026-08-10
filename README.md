@@ -50,30 +50,19 @@ GET https://gm.goodme.qzz.io/api/status
 
 ### Cloudflare 控制台一次性配置
 
-本项目的 **KV 绑定由 [`wrangler.toml`](wrangler.toml) 管理**（控制台会出现“绑定通过 wrangler.toml 进行管理”的提示，这是正常的）。
-
-1. **创建 KV namespace**  
-   Workers & Pages → KV → Create a namespace（名字随意，例如 `czrhtml-status`）  
-   打开后复制 **Namespace ID**
-2. **写入仓库配置**  
-   编辑根目录 `wrangler.toml`，把：
-
-   ```toml
-   id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
-   ```
-
-   换成你的真实 Namespace ID，然后 **提交并推送**。Pages 会按该文件绑定 `STATUS_KV`。
-3. **设置管理密码（仍在控制台）**  
-   Pages 项目 → Settings → Variables and Secrets / Environment variables（Production）  
+1. **创建 KV namespace**（若还没有）  
+   Workers & Pages → KV → Create a namespace
+2. **在 Pages 项目里绑定 KV**  
+   打开你的 Pages 项目 → **Settings** → **Bindings**（或 Functions → KV namespace bindings）→ **Add**  
+   - Variable name：`STATUS_KV`（必须一致）  
+   - KV namespace：选你创建的那个  
+   - 环境：Production  
+   若之前因 `wrangler.toml` 提示“绑定由配置文件管理”，仓库已不再使用该文件；重新部署后即可在控制台添加绑定。
+3. **设置管理密码**  
+   Settings → Variables and Secrets（Production）  
    - Name：`STATUS_PASSWORD`  
-   - Value：你的密码（Encrypt / Secret）  
-   密码不要写进 `wrangler.toml`。
-4. 推送部署完成后验证：  
+   - Value：你的密码（Encrypt / Secret）
+4. **重新部署**（Deployments → Retry deployment）  
+5. 验证：  
    - `https://gm.goodme.qzz.io/api/status`  
    - `https://gm.goodme.qzz.io/admin-status.html`
-
-本地可用（可选）：
-
-```bash
-npx wrangler pages dev . --binding STATUS_PASSWORD=dev-password
-```
