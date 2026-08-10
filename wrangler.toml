@@ -1,13 +1,16 @@
-# Optional local/dev alignment for Cloudflare Pages.
-# Production deploy path remains: GitHub push → Pages auto deploy.
-# KV binding and STATUS_PASSWORD should also be configured in the Pages dashboard.
+# Cloudflare Pages config (bindings are managed HERE, not in the dashboard UI).
+# After changing this file: commit + push, then wait for Pages to redeploy.
 
 name = "czrhtml"
 compatibility_date = "2024-11-01"
 pages_build_output_dir = "."
 
-# After creating the KV namespace in Cloudflare, paste its id below
-# (or bind STATUS_KV only via Pages → Settings → Functions → KV namespace bindings).
-# [[kv_namespaces]]
-# binding = "STATUS_KV"
-# id = "your_kv_namespace_id"
+# 1) Dashboard → Workers & Pages → KV → Create namespace (e.g. czrhtml-status)
+# 2) Open that namespace and copy its Namespace ID
+# 3) Paste the ID below, then commit & push
+[[kv_namespaces]]
+binding = "STATUS_KV"
+id = "67de86fcf3ff4155b60b3eb44cd0d845"
+
+# Do NOT put STATUS_PASSWORD in this file.
+# Set it in Pages → Settings → Variables and Secrets (Encrypt / Secret).

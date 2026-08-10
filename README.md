@@ -50,21 +50,30 @@ GET https://gm.goodme.qzz.io/api/status
 
 ### Cloudflare 控制台一次性配置
 
-代码推送到 GitHub 并由 Pages 部署后，在对应 Pages 项目里完成：
+本项目的 **KV 绑定由 [`wrangler.toml`](wrangler.toml) 管理**（控制台会出现“绑定通过 wrangler.toml 进行管理”的提示，这是正常的）。
 
-1. **创建 KV namespace**（Workers & Pages → KV）
-2. **绑定到本项目**  
-   Pages 项目 → Settings → Functions → KV namespace bindings  
-   - Variable name / Binding：`STATUS_KV`
-3. **设置管理密码**  
-   Pages 项目 → Settings → Environment variables（Production）  
+1. **创建 KV namespace**  
+   Workers & Pages → KV → Create a namespace（名字随意，例如 `czrhtml-status`）  
+   打开后复制 **Namespace ID**
+2. **写入仓库配置**  
+   编辑根目录 `wrangler.toml`，把：
+
+   ```toml
+   id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
+   ```
+
+   换成你的真实 Namespace ID，然后 **提交并推送**。Pages 会按该文件绑定 `STATUS_KV`。
+3. **设置管理密码（仍在控制台）**  
+   Pages 项目 → Settings → Variables and Secrets / Environment variables（Production）  
    - Name：`STATUS_PASSWORD`  
-   - Value：你的密码（建议 Encrypt / Secret）
-4. 如有 Preview 环境也要用，给 Preview 同样绑 KV 和变量
-5. 配置保存后如接口仍报 missing binding，触发一次重新部署
+   - Value：你的密码（Encrypt / Secret）  
+   密码不要写进 `wrangler.toml`。
+4. 推送部署完成后验证：  
+   - `https://gm.goodme.qzz.io/api/status`  
+   - `https://gm.goodme.qzz.io/admin-status.html`
 
 本地可用（可选）：
 
 ```bash
-npx wrangler pages dev . --kv=STATUS_KV --binding STATUS_PASSWORD=dev-password
+npx wrangler pages dev . --binding STATUS_PASSWORD=dev-password
 ```
