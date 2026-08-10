@@ -21,7 +21,7 @@ function defaultStatus() {
 
 async function readStatus(env) {
   if (!env.STATUS_KV) {
-    return { error: 'STATUS_KV binding is missing', status: 503 };
+    return { error: 'Service unavailable', status: 503 };
   }
 
   const raw = await env.STATUS_KV.get(KV_KEY);
@@ -69,17 +69,17 @@ export async function onRequestPost(context) {
   const { env } = context;
 
   if (!env.STATUS_PASSWORD) {
-    return json({ error: 'STATUS_PASSWORD secret is not configured' }, 503);
+    return json({ error: 'Service unavailable' }, 503);
   }
   if (!env.STATUS_KV) {
-    return json({ error: 'STATUS_KV binding is missing' }, 503);
+    return json({ error: 'Service unavailable' }, 503);
   }
 
   let body;
   try {
     body = await context.request.json();
   } catch {
-    return json({ error: 'Invalid JSON body' }, 400);
+    return json({ error: 'Invalid request' }, 400);
   }
 
   if (!passwordsMatch(body && body.password, env.STATUS_PASSWORD)) {
@@ -87,7 +87,7 @@ export async function onRequestPost(context) {
   }
 
   if (typeof (body && body.offline) !== 'boolean') {
-    return json({ error: 'Field "offline" must be a boolean' }, 400);
+    return json({ error: 'Invalid request' }, 400);
   }
 
   const next = {
