@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="icon" href="./assets/images/avatar.jpg" type="image/jpeg" />
   <style>
     :root {
       --bg: #f0f2f5;
@@ -15,12 +16,16 @@
       --text-dim: #636e72;
       --text-muted: #b2bec3;
       --shadow: 0 2px 12px rgba(0,0,0,0.06);
+      --shadow-hover: 0 6px 24px rgba(0,0,0,0.1);
       --radius: 14px;
       --radius-sm: 10px;
       --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      --primary: #a29bfe;
+      --primary: #e56b8a;
+      --primary-soft: rgba(229, 107, 138, 0.12);
+      --accent: #0f8b8d;
       --success: #00b894;
       --warning: #fdcb6e;
+      --ease: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -29,16 +34,17 @@
       color: var(--text);
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
-      padding-bottom: 2rem;
+      padding-bottom: 3rem;
+      position: relative;
     }
     body::before {
       content: '';
       position: fixed;
       inset: 0;
       background:
-        radial-gradient(ellipse 600px 400px at 10% 5%, rgba(15, 139, 141, 0.06), transparent),
-        radial-gradient(ellipse 500px 500px at 90% 20%, rgba(255, 107, 107, 0.05), transparent),
-        radial-gradient(ellipse 400px 500px at 50% 95%, rgba(108, 92, 231, 0.05), transparent);
+        radial-gradient(ellipse 600px 400px at 12% 4%, rgba(229, 107, 138, 0.08), transparent),
+        radial-gradient(ellipse 500px 500px at 92% 18%, rgba(15, 139, 141, 0.05), transparent),
+        radial-gradient(ellipse 400px 500px at 50% 95%, rgba(253, 203, 110, 0.05), transparent);
       pointer-events: none;
       z-index: 0;
     }
@@ -57,16 +63,19 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(255,255,255,0.8);
+      background: rgba(255,255,255,0.85);
       backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid rgba(0,0,0,0.04);
     }
     .top-bar-inner {
-      max-width: 680px;
+      max-width: 720px;
       margin: 0 auto;
-      padding: 0.6rem 1rem;
+      padding: 0.65rem 1.1rem;
       display: flex;
       align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
     }
     .top-brand {
       display: flex;
@@ -81,38 +90,76 @@
       background-image: url(./assets/images/avatar.jpg);
       background-size: cover;
       background-position: center;
+      box-shadow: 0 0 0 2px #fff, 0 2px 8px rgba(0,0,0,0.1);
     }
-    .top-name { font-weight: 700; font-size: 0.9rem; }
-    .top-tag { font-size: 0.7rem; color: var(--text-dim); }
+    .top-name { font-weight: 700; font-size: 0.95rem; line-height: 1.2; }
+    .top-tag { font-size: 0.72rem; color: var(--text-dim); }
+    .back-link {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      padding: 0.4rem 0.75rem;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.04);
+      transition: background var(--ease), color var(--ease);
+      white-space: nowrap;
+    }
+    .back-link:hover { background: rgba(0,0,0,0.08); color: var(--text); }
 
     .content {
-      max-width: 680px;
+      max-width: 720px;
       margin: 0 auto;
-      padding: 0 1rem;
+      padding: 1.25rem 1.1rem 0;
       position: relative;
       z-index: 1;
     }
 
-    .block { margin-top: 1.25rem; }
-    .block-label {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-dim);
-      margin-bottom: 0.6rem;
+    .page-head {
+      margin-bottom: 1.15rem;
     }
-    .block-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .page-head h1 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.35rem;
+    }
+    .page-head p {
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
 
-    .card-main {
+    .panel {
       background: var(--surface);
-      border: 1px solid rgba(0,0,0,0.04);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 1.5rem 1.25rem;
+      padding: 1.2rem 1.15rem 1.3rem;
+      margin-bottom: 1rem;
+    }
+    .panel-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.9rem;
+      flex-wrap: wrap;
+    }
+    .panel-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .panel-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .panel-desc {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      line-height: 1.4;
     }
 
     .field-label {
@@ -122,32 +169,40 @@
       margin-bottom: 0.5rem;
     }
     .field-label span { font-weight: 400; color: var(--text-dim); }
+
     #textInput {
       width: 100%;
-      padding: 0.75rem 1rem;
-      border: 2px solid #e0e0e0;
+      padding: 0.85rem 1rem;
+      border: 1.5px solid rgba(0,0,0,0.1);
       border-radius: var(--radius-sm);
       font-family: var(--font);
       font-size: 1rem;
       outline: none;
-      transition: border-color .2s;
+      background: #fafbfc;
+      transition: border-color .2s, box-shadow .2s, background .2s;
     }
-    #textInput:focus { border-color: var(--primary); }
+    #textInput:focus {
+      border-color: var(--primary);
+      background: #fff;
+      box-shadow: 0 0 0 3px var(--primary-soft);
+    }
 
-    .char-editor-wrap { margin-top: 1rem; }
     .char-list {
       display: flex;
       flex-wrap: wrap;
-      gap: 4px;
-      margin-top: 0.5rem;
-      min-height: 48px;
+      gap: 6px;
+      margin-top: 0.15rem;
+      min-height: 52px;
       align-items: center;
+      padding: 0.75rem;
+      background: #f7f8fa;
+      border-radius: var(--radius-sm);
       user-select: none;
     }
     .char-item {
       position: relative;
       width: 44px; height: 44px;
-      border-radius: var(--radius-sm);
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -160,45 +215,48 @@
     }
     .char-item:hover { transform: scale(1.08); }
     .char-item.selected {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(162, 155, 254, 0.3);
+      border-color: #fff;
+      box-shadow: 0 0 0 2px var(--primary), 0 4px 12px rgba(229, 107, 138, 0.35);
       z-index: 1;
     }
-    .char-empty { color: var(--text-muted); font-size: 0.85rem; padding: 10px 0; }
+    .char-empty { color: var(--text-muted); font-size: 0.85rem; padding: 6px 4px; }
     .selection-hint {
       font-size: 0.75rem;
       color: var(--text-dim);
-      margin-top: 0.5rem;
+      margin-top: 0.55rem;
       min-height: 1.2em;
     }
 
     .toolbar {
       margin-top: 1rem;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      align-items: flex-end;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.75rem;
+      padding: 0.85rem;
+      background: #f7f8fa;
+      border-radius: var(--radius-sm);
     }
     .toolbar-group {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
+      min-width: 0;
     }
     .toolbar-group-label {
-      font-size: 0.7rem;
-      font-weight: 600;
+      font-size: 0.68rem;
+      font-weight: 700;
       color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.04em;
     }
     .toolbar-row {
       display: flex;
-      gap: 4px;
+      gap: 5px;
       align-items: center;
+      flex-wrap: wrap;
     }
     .tool-btn {
       width: 36px; height: 36px;
-      border: 2px solid #e0e0e0;
+      border: 1.5px solid rgba(0,0,0,0.1);
       border-radius: 8px;
       background: #fff;
       cursor: pointer;
@@ -211,7 +269,11 @@
       color: var(--text);
       font-family: var(--font);
     }
-    .tool-btn:hover { border-color: var(--primary); background: #f8f7ff; }
+    .tool-btn:hover {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
     .tool-btn.active {
       border-color: var(--primary);
       background: var(--primary);
@@ -219,20 +281,23 @@
     }
     .tool-btn-wide {
       width: auto;
-      padding: 0 8px;
+      padding: 0 9px;
       font-size: 12px;
     }
 
     .color-preview {
       width: 36px; height: 36px;
-      border: 2px solid #e0e0e0;
+      border: 1.5px solid rgba(0,0,0,0.1);
       border-radius: 8px;
       cursor: pointer;
-      transition: border-color .15s;
+      transition: border-color .15s, transform .15s;
       position: relative;
       overflow: hidden;
     }
-    .color-preview:hover { border-color: var(--primary); }
+    .color-preview:hover {
+      border-color: var(--primary);
+      transform: scale(1.05);
+    }
     .color-preview input[type="color"] {
       position: absolute;
       inset: -4px;
@@ -244,48 +309,61 @@
     }
 
     .size-input {
-      width: 55px;
+      width: 56px;
       height: 36px;
-      border: 2px solid #e0e0e0;
+      border: 1.5px solid rgba(0,0,0,0.1);
       border-radius: 8px;
       text-align: center;
       font-size: 13px;
       font-weight: 600;
       font-family: var(--font);
       outline: none;
-      transition: border-color .15s;
+      background: #fff;
+      transition: border-color .15s, box-shadow .15s;
     }
-    .size-input:focus { border-color: var(--primary); }
+    .size-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-soft);
+    }
 
     .palette-section { margin-top: 1rem; }
-    .palette-label { font-size: 0.7rem; font-weight: 600; color: var(--text-dim); margin-bottom: 0.4rem; }
+    .palette-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      margin-bottom: 0.45rem;
+    }
     .palette {
       display: flex;
       flex-wrap: wrap;
-      gap: 4px;
+      gap: 6px;
     }
     .palette-btn {
       width: 28px; height: 28px;
-      border-radius: 6px;
+      border-radius: 8px;
       border: 2px solid transparent;
       cursor: pointer;
-      transition: transform .15s, border-color .15s;
+      transition: transform .15s, border-color .15s, box-shadow .15s;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06);
     }
-    .palette-btn:hover { transform: scale(1.15); }
+    .palette-btn:hover {
+      transform: scale(1.12);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
     .palette-btn.active-color { border-color: var(--text); }
 
     .template-list {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 0.5rem;
+      gap: 8px;
     }
     .template-btn {
-      padding: 6px 12px;
-      border: 1px solid #e0e0e0;
-      border-radius: 20px;
+      padding: 0.45rem 0.9rem;
+      border: 1.5px solid rgba(0,0,0,0.08);
+      border-radius: 999px;
       background: #fff;
-      font-size: 0.78rem;
+      font-size: 0.8rem;
+      font-weight: 600;
       font-family: var(--font);
       cursor: pointer;
       transition: all .15s;
@@ -293,59 +371,88 @@
     }
     .template-btn:hover {
       border-color: var(--primary);
-      background: #f8f7ff;
+      background: var(--primary-soft);
       color: var(--primary);
     }
 
     .preview-wrap {
-      margin-top: 1rem;
-      padding: 1.25rem;
-      background: #f8f9fa;
+      padding: 1.15rem 1.1rem;
+      background:
+        linear-gradient(180deg, #fff 0%, #f7f8fa 100%);
       border-radius: var(--radius-sm);
-      border: 1px solid rgba(0,0,0,0.04);
-      min-height: 80px;
+      border: 1px dashed rgba(0,0,0,0.1);
+      min-height: 96px;
     }
-    .preview-label { font-size: 0.75rem; font-weight: 600; color: var(--text-dim); margin-bottom: 0.6rem; }
+    .preview-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-dim);
+      letter-spacing: 0.04em;
+      margin-bottom: 0.7rem;
+    }
     .preview-box {
       word-break: break-all;
-      line-height: 1.8;
-      min-height: 40px;
+      line-height: 1.85;
+      min-height: 44px;
     }
 
-    .output-wrap { margin-top: 0.75rem; position: relative; }
+    .output-wrap { margin-top: 0.85rem; position: relative; }
     .output-wrap textarea {
       width: 100%;
-      height: 70px;
-      padding: 0.75rem;
-      border: 2px solid #e0e0e0;
+      height: 84px;
+      padding: 0.8rem 0.9rem;
+      border: 1.5px solid rgba(0,0,0,0.1);
       border-radius: var(--radius-sm);
       font-size: 0.75rem;
-      font-family: "Courier New", monospace;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       resize: vertical;
       outline: none;
-      background: #fafafa;
+      background: #fafbfc;
       color: var(--text);
-      line-height: 1.5;
+      line-height: 1.55;
+      transition: border-color .2s, box-shadow .2s;
     }
-    .output-wrap textarea:focus { border-color: var(--primary); }
+    .output-wrap textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-soft);
+      background: #fff;
+    }
 
-    .btn-row { display: flex; gap: 0.5rem; margin-top: 1rem; }
+    .btn-row {
+      display: flex;
+      gap: 0.6rem;
+      margin-top: 1rem;
+    }
     .btn {
       flex: 1;
-      padding: 0.75rem;
+      padding: 0.8rem 1rem;
       border: none;
       border-radius: var(--radius-sm);
-      font-size: 0.85rem;
-      font-weight: 600;
+      font-size: 0.88rem;
+      font-weight: 700;
       font-family: var(--font);
       cursor: pointer;
-      transition: opacity .2s, transform .15s;
+      transition: opacity .2s, transform .15s, background .15s, box-shadow .15s;
     }
     .btn:active { transform: scale(.97); }
-    .btn-primary { background: var(--primary); color: #fff; }
-    .btn-primary:hover { opacity: .9; }
-    .btn-outline { background: #f0f0f0; color: var(--text); }
-    .btn-outline:hover { background: #e0e0e0; }
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(229, 107, 138, 0.28);
+    }
+    .btn-primary:hover { opacity: .92; }
+    .btn-outline {
+      background: rgba(0,0,0,0.04);
+      color: var(--text);
+    }
+    .btn-outline:hover { background: rgba(0,0,0,0.08); }
+
+    .footer-note {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
+    }
 
     .toast {
       position: fixed;
@@ -361,14 +468,17 @@
       transition: opacity .3s, transform .3s;
       pointer-events: none;
       z-index: 9999;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    @media (max-width: 480px) {
-      .content { padding: 0 0.85rem; }
-      .card-main { padding: 1.25rem 1rem; }
-      .char-item { width: 38px; height: 38px; font-size: 16px; }
-      .tool-btn { width: 32px; height: 32px; font-size: 12px; }
+    @media (max-width: 640px) {
+      .toolbar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .page-head h1 { font-size: 1.3rem; }
+      .char-item { width: 40px; height: 40px; font-size: 16px; }
+      .tool-btn { width: 34px; height: 34px; font-size: 12px; }
+      .content { padding: 1rem 0.9rem 0; }
+      .panel { padding: 1.05rem 0.95rem 1.15rem; }
     }
   </style>
 </head>
@@ -385,99 +495,111 @@
           <div class="top-tag">专属个签生成器</div>
         </div>
       </a>
+      <a href="./index.html" class="back-link">← 返回首页</a>
     </div>
   </div>
 
   <div class="content">
-    <div class="block">
-      <div class="block-label">
-        <span class="block-dot" style="background:var(--primary)"></span>
-        文字输入
-      </div>
-      <div class="card-main">
-        <div class="field-label">输入文字 <span>· 最多50字</span></div>
-        <input id="textInput" type="text" placeholder="输入个性签名内容..." maxlength="50" value="你好，游戏世界！" />
-      </div>
+    <div class="page-head">
+      <h1>个性签名生成</h1>
+      <p>逐字调色、套用模板，一键复制富文本代码到游戏个性签名。</p>
     </div>
 
-    <div class="block">
-      <div class="block-label">
-        <span class="block-dot" style="background:#fd79a8"></span>
-        字符选择 & 样式
+    <section class="panel">
+      <div class="panel-head">
+        <div class="panel-title">
+          <span class="panel-dot" style="background:var(--primary)"></span>
+          文字输入
+        </div>
+        <div class="panel-desc">最多 50 字</div>
       </div>
-      <div class="card-main">
-        <div class="field-label">点击选择字符 <span>· 按住 Ctrl/Shift 多选</span></div>
-        <div class="char-list" id="charList"></div>
-        <div class="selection-hint" id="selectionHint"></div>
+      <input id="textInput" type="text" placeholder="输入个性签名内容..." maxlength="50" value="你好，游戏世界！" />
+    </section>
 
-        <div class="toolbar">
-          <div class="toolbar-group">
-            <div class="toolbar-group-label">颜色</div>
-            <div class="toolbar-row">
-              <div class="color-preview" id="colorPreview" style="background:#a29bfe">
-                <input type="color" id="colorPicker" value="#a29bfe" />
-              </div>
-            </div>
-          </div>
-          <div class="toolbar-group">
-            <div class="toolbar-group-label">大小</div>
-            <div class="toolbar-row">
-              <input type="number" class="size-input" id="sizeInput" value="20" min="10" max="60" />
-            </div>
-          </div>
-          <div class="toolbar-group">
-            <div class="toolbar-group-label">样式</div>
-            <div class="toolbar-row">
-              <button class="tool-btn" id="boldBtn" title="加粗"><b>B</b></button>
-              <button class="tool-btn" id="italicBtn" title="斜体"><i>I</i></button>
-              <button class="tool-btn" id="underlineBtn" title="下划线"><u>U</u></button>
-            </div>
-          </div>
-          <div class="toolbar-group">
-            <div class="toolbar-group-label">特殊</div>
-            <div class="toolbar-row">
-              <button class="tool-btn tool-btn-wide" id="supBtn" title="上标（仅支持数字和英文）">X²</button>
-              <button class="tool-btn tool-btn-wide" id="subBtn" title="下标（仅支持数字和英文）">X₂</button>
+    <section class="panel">
+      <div class="panel-head">
+        <div class="panel-title">
+          <span class="panel-dot" style="background:#fd79a8"></span>
+          字符选择 & 样式
+        </div>
+        <div class="panel-desc">Ctrl / Shift 可多选</div>
+      </div>
+
+      <div class="field-label">点击选择字符</div>
+      <div class="char-list" id="charList"></div>
+      <div class="selection-hint" id="selectionHint"></div>
+
+      <div class="toolbar">
+        <div class="toolbar-group">
+          <div class="toolbar-group-label">颜色</div>
+          <div class="toolbar-row">
+            <div class="color-preview" id="colorPreview" style="background:#e56b8a">
+              <input type="color" id="colorPicker" value="#e56b8a" />
             </div>
           </div>
         </div>
+        <div class="toolbar-group">
+          <div class="toolbar-group-label">大小</div>
+          <div class="toolbar-row">
+            <input type="number" class="size-input" id="sizeInput" value="20" min="10" max="60" />
+          </div>
+        </div>
+        <div class="toolbar-group">
+          <div class="toolbar-group-label">样式</div>
+          <div class="toolbar-row">
+            <button class="tool-btn" id="boldBtn" title="加粗"><b>B</b></button>
+            <button class="tool-btn" id="italicBtn" title="斜体"><i>I</i></button>
+            <button class="tool-btn" id="underlineBtn" title="下划线"><u>U</u></button>
+          </div>
+        </div>
+        <div class="toolbar-group">
+          <div class="toolbar-group-label">特殊</div>
+          <div class="toolbar-row">
+            <button class="tool-btn tool-btn-wide" id="supBtn" title="上标（仅支持数字和英文）">X²</button>
+            <button class="tool-btn tool-btn-wide" id="subBtn" title="下标（仅支持数字和英文）">X₂</button>
+          </div>
+        </div>
+      </div>
 
-        <div class="palette-section">
-          <div class="palette-label">快速颜色</div>
-          <div class="palette" id="palette"></div>
-        </div>
+      <div class="palette-section">
+        <div class="palette-label">快速颜色</div>
+        <div class="palette" id="palette"></div>
       </div>
-    </div>
+    </section>
 
-    <div class="block">
-      <div class="block-label">
-        <span class="block-dot" style="background:var(--warning)"></span>
-        预设模板
+    <section class="panel">
+      <div class="panel-head">
+        <div class="panel-title">
+          <span class="panel-dot" style="background:var(--warning)"></span>
+          预设模板
+        </div>
+        <div class="panel-desc">一键套用配色风格</div>
       </div>
-      <div class="card-main">
-        <div class="template-list" id="templateList"></div>
-      </div>
-    </div>
+      <div class="template-list" id="templateList"></div>
+    </section>
 
-    <div class="block">
-      <div class="block-label">
-        <span class="block-dot" style="background:var(--success)"></span>
-        预览 & 输出
+    <section class="panel">
+      <div class="panel-head">
+        <div class="panel-title">
+          <span class="panel-dot" style="background:var(--success)"></span>
+          预览 & 输出
+        </div>
+        <div class="panel-desc">复制后粘贴到游戏签名框</div>
       </div>
-      <div class="card-main">
-        <div class="preview-wrap">
-          <div class="preview-label">预览效果</div>
-          <div class="preview-box" id="previewBox"></div>
-        </div>
-        <div class="output-wrap">
-          <textarea id="outputBox" readonly placeholder="生成的代码将显示在这里..."></textarea>
-        </div>
-        <div class="btn-row">
-          <button class="btn btn-primary" id="copyBtn">复制代码</button>
-          <button class="btn btn-outline" id="resetBtn">重置全部</button>
-        </div>
+      <div class="preview-wrap">
+        <div class="preview-label">预览效果</div>
+        <div class="preview-box" id="previewBox"></div>
       </div>
-    </div>
+      <div class="output-wrap">
+        <textarea id="outputBox" readonly placeholder="生成的代码将显示在这里..."></textarea>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="copyBtn">复制代码</button>
+        <button class="btn btn-outline" id="resetBtn">重置全部</button>
+      </div>
+    </section>
+
+    <p class="footer-note">GoodMe 个性签名工具</p>
   </div>
 
   <div class="toast" id="toast"></div>
@@ -635,7 +757,7 @@
       });
 
       colorPreview.style.background = uniformColor || '#ccc';
-      colorPicker.value = uniformColor || '#a29bfe';
+      colorPicker.value = uniformColor || '#e56b8a';
       sizeInput.value = uniformSize || '';
       boldBtn.classList.toggle('active', uniformBold);
       italicBtn.classList.toggle('active', uniformItalic);
@@ -672,7 +794,6 @@
     italicBtn.addEventListener('click', () => applyStyle('italic', !italicBtn.classList.contains('active')));
     underlineBtn.addEventListener('click', () => applyStyle('underline', !underlineBtn.classList.contains('active')));
 
-    // Unicode 上标/下标映射
     const SUPER_MAP = {
       '0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹',
       'a':'ᵃ','b':'ᵇ','c':'ᶜ','d':'ᵈ','e':'ᵉ','f':'ᶠ','g':'ᵍ','h':'ʰ','i':'ⁱ','j':'ʲ',
@@ -682,7 +803,6 @@
       'K':'ᴷ','L':'ᴸ','M':'ᴹ','N':'ᴺ','O':'ᴼ','P':'ᴾ','Q':'Q','R':'ᴿ','S':'ˢ','T':'ᵀ',
       'U':'ᵁ','V':'ⱽ','W':'ᵂ','X':'ˣ','Y':'ʸ','Z':'ᶻ',
       '+':'⁺','-':'⁻','=':'₌','(':'⁽',')':'⁾','n':'ⁿ','i':'ⁱ',
-      // 下标转上标
       '₀':'⁰','₁':'¹','₂':'²','₃':'³','₄':'⁴','₅':'⁵','₆':'⁶','₇':'⁷','₈':'⁸','₉':'⁹',
       'ₐ':'ᵃ','ₑ':'ᵉ','ₕ':'ʰ','ᵢ':'ⁱ','ⱼ':'ʲ','ₖ':'ᵏ','ₗ':'ˡ','ₘ':'ᵐ','ₙ':'ⁿ','ₒ':'ᵒ',
       'ₚ':'ᵖ','ᵣ':'ʳ','ₛ':'ˢ','ₜ':'ᵗ','ᵤ':'ᵘ','ᵥ':'ᵛ','ₓ':'ˣ',
@@ -693,7 +813,6 @@
       'a':'ₐ','e':'ₑ','h':'ₕ','i':'ᵢ','j':'ⱼ','k':'ₖ','l':'ₗ','m':'ₘ','n':'ₙ','o':'ₒ',
       'p':'ₚ','r':'ᵣ','s':'ₛ','t':'ₜ','u':'ᵤ','v':'ᵥ','x':'ₓ',
       '+':'₊','-':'₋','=':'₌','(':'₍',')':'₎',
-      // 上标转下标
       '⁰':'₀','¹':'₁','²':'₂','³':'₃','⁴':'₄','⁵':'₅','⁶':'₆','⁷':'₇','⁸':'₈','⁹':'₉',
       'ᵃ':'ₐ','ᵉ':'ₑ','ʰ':'ₕ','ⁱ':'ᵢ','ʲ':'ⱼ','ᵏ':'ₖ','ˡ':'ₗ','ᵐ':'ₘ','ⁿ':'ₙ','ᵒ':'ₒ',
       'ᵖ':'ₚ','ʳ':'ᵣ','ˢ':'ₛ','ᵗ':'ᵗ','ᵘ':'ᵤ','ᵛ':'ᵥ','ˣ':'ₓ',
@@ -701,7 +820,7 @@
     };
 
     function convertChar(ch, map) {
-      return map[ch] || ch; // 没有映射的字符保持原样
+      return map[ch] || ch;
     }
 
     function applySupSub(type) {
@@ -713,7 +832,6 @@
       selectedIndices.forEach(idx => {
         charData[idx].char = convertChar(charData[idx].char, map);
       });
-      // 同步更新输入框
       textInput.value = charData.map(d => d.char).join('');
       renderAll();
       showToast(type === 'sup' ? '已转为上标' : '已转为下标');
@@ -773,14 +891,12 @@
     function renderOutput() {
       if (!charData.length) { outputBox.value = ''; return; }
 
-      // 按样式分组连续字符
       let groups = [];
       let currentGroup = { chars: [charData[0]], styles: { ...charData[0] } };
 
       for (let i = 1; i < charData.length; i++) {
         const prev = charData[i - 1];
         const curr = charData[i];
-        // 检查除颜色外的样式是否相同
         if (prev.size === curr.size && prev.bold === curr.bold &&
             prev.italic === curr.italic && prev.underline === curr.underline) {
           currentGroup.chars.push(curr);
@@ -797,7 +913,6 @@
         let outerOpen = [];
         let outerClose = [];
 
-        // 外层样式：大小、加粗、斜体、下划线
         if (s.size !== 20) {
           outerOpen.push(`<size=${s.size}>`);
           outerClose.unshift('</size>');
@@ -808,7 +923,6 @@
 
         code += outerOpen.join('');
 
-        // 内层：合并连续相同颜色的字符
         let colorGroups = [];
         let currentColorGroup = { color: group.chars[0].color, text: group.chars[0].char };
         for (let j = 1; j < group.chars.length; j++) {
