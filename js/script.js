@@ -315,4 +315,92 @@ document.addEventListener('DOMContentLoaded', function () {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(resize, 200);
   });
+
+  /* ===== Feature showcase (manual slider) ===== */
+  var showcaseTrack = document.getElementById('feature-showcase-track');
+  var showcaseDots = document.getElementById('feature-showcase-dots');
+  var showcasePrev = document.getElementById('feature-prev');
+  var showcaseNext = document.getElementById('feature-next');
+
+  if (showcaseTrack && showcaseDots) {
+    var slides = Array.prototype.slice.call(showcaseTrack.querySelectorAll('.feature-slide'));
+    var activeIndex = 0;
+    var scrollTimer = null;
+    var dragStartX = 0;
+    var dragDelta = 0;
+
+    slides.forEach(function (_, i) {
+      var dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = 'feature-dot' + (i === 0 ? ' active' : '');
+      dot.setAttribute('aria-label', '亮点 ' + (i + 1));
+      dot.addEventListener('click', function () { goToSlide(i); });
+      showcaseDots.appendChild(dot);
+    });
+
+    var dots = Array.prototype.slice.call(showcaseDots.querySelectorAll('.feature-dot'));
+
+    function goToSlide(index) {
+      if (!slides.length) return;
+      activeIndex = (index + slides.length) % slides.length;
+      var slide = slides[activeIndex];
+      var left = slide.offsetLeft - (showcaseTrack.clientWidth - slide.offsetWidth) / 2;
+      showcaseTrack.scrollTo({ left: left, behavior: 'smooth' });
+      updateDots(activeIndex);
+    }
+
+    function updateDots(index) {
+      dots.forEach(function (dot, i) {
+        if (i === index) dot.classList.add('active');
+        else dot.classList.remove('active');
+      });
+    }
+
+    function syncFromScroll() {
+      var center = showcaseTrack.scrollLeft + showcaseTrack.clientWidth / 2;
+      var nearest = 0;
+      var nearestDist = Infinity;
+      slides.forEach(function (slide, i) {
+        var mid = slide.offsetLeft + slide.offsetWidth / 2;
+        var dist = Math.abs(mid - center);
+        if (dist < nearestDist) {
+          nearestDist = dist;
+          nearest = i;
+        }
+      });
+      if (nearest !== activeIndex) {
+        activeIndex = nearest;
+        updateDots(activeIndex);
+      }
+    }
+
+    showcaseTrack.addEventListener('scroll', function () {
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(syncFromScroll, 60);
+    }, { passive: true });
+
+    if (showcasePrev) {
+      showcasePrev.addEventListener('click', function () { goToSlide(activeIndex - 1); });
+    }
+    if (showcaseNext) {
+      showcaseNext.addEventListener('click', function () { goToSlide(activeIndex + 1); });
+    }
+
+    // Avoid accidental navigation after a swipe drag
+    showcaseTrack.addEventListener('pointerdown', function (e) {
+      dragStartX = e.clientX;
+      dragDelta = 0;
+    });
+    showcaseTrack.addEventListener('pointermove', function (e) {
+      if (dragStartX) dragDelta = Math.abs(e.clientX - dragStartX);
+    });
+    showcaseTrack.addEventListener('click', function (e) {
+      if (dragDelta > 10) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      dragStartX = 0;
+      dragDelta = 0;
+    }, true);
+  }
 });
